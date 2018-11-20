@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.shape.Line?>
+
+<Pane fx:id="pane" prefHeight="880.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ChessBoard">
+   <children>
+      <Pane layoutX="80.0" layoutY="80.0" prefHeight="720.0" prefWidth="640.0">
+         <children>
+            <Line endX="640.0" />
+            <Line endX="640.0" layoutY="720.0" />
+            <Line endX="640.0" layoutY="80.0" />
+            <Line endX="640.0" layoutY="160.0" />
+            <Line endX="640.0" layoutY="240.0" />
+            <Line endX="640.0" layoutY="320.0" />
+            <Line endX="640.0" layoutY="400.0" />
+            <Line endX="640.0" layoutY="480.0" />
+            <Line endX="640.0" layoutY="560.0" />
+            <Line endX="640.0" layoutY="640.0" />
+            <Line endY="720.0" />
+            <Line endY="720.0" layoutX="640.0" />
+            <Line endY="320.0" layoutX="80.0" />
+            <Line endY="320.0" layoutX="160.0" />
+            <Line endY="320.0" layoutX="240.0" />
+            <Line endY="320.0" layoutX="320.0" />
+            <Line endY="320.0" layoutX="400.0" />
+            <Line endY="320.0" layoutX="480.0" />
+            <Line endY="320.0" layoutX="560.0" />
+            <Line endY="320.0" layoutX="80.0" layoutY="400.0" />
+            <Line endY="320.0" layoutX="160.0" layoutY="400.0" />
+            <Line endY="320.0" layoutX="240.0" layoutY="400.0" />
+            <Line endY="320.0" layoutX="320.0" layoutY="400.0" />
+            <Line endY="320.0" layoutX="400.0" layoutY="400.0" />
+            <Line endY="320.0" layoutX="480.0" layoutY="400.0" />
+            <Line endY="320.0" layoutX="560.0" layoutY="400.0" />
+            <Line endX="160.0" endY="160.0" layoutX="240.0" />
+            <Line endX="160.0" endY="160.0" layoutX="240.0" layoutY="560.0" />
+            <Line endX="-160.0" endY="160.0" layoutX="400.0" />
+            <Line endX="-160.0" endY="160.0" layoutX="400.0" layoutY="560.0" />
+         </children></Pane>
+      <GridPane fx:id="chessGrid" layoutX="40.0" layoutY="40.0">
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="80.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="80.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="80.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="80.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="80.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="80.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="80.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="80.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="80.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" prefHeight="80.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" prefHeight="80.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" prefHeight="80.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" prefHeight="80.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" prefHeight="80.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" prefHeight="80.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" prefHeight="80.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" prefHeight="80.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" prefHeight="80.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" prefHeight="80.0" vgrow="SOMETIMES" />
+         </rowConstraints>
+      </GridPane>
+   </children>
+</Pane>
