@@ -1,15 +1,15 @@
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 
-public class Ground extends Label {
+public class ChessGround extends Label {
     private int positionX, positionY;
     private Chess type = Chess.None;
     private String group = "";
 
-    Ground(){
+    ChessGround(){
     }
 
-    Ground(int positionX, int positionY){
+    ChessGround(int positionX, int positionY){
         this.positionX = positionX;
         this.positionY = positionY;
     }

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="448.0" prefWidth="625.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ClientLogin">
+   <children>
+      <BorderPane layoutX="-5.0" layoutY="-5.0" prefHeight="456.0" prefWidth="636.0" style="-fx-background-image: url(&quot;back.png&quot;);;">
+         <top>
+            <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="119.0" prefWidth="401.0" text="登入畫面" textFill="#ff006240" textOverrun="LEADING_ELLIPSIS" underline="true" BorderPane.alignment="CENTER">
+               <font>
+                  <Font name="System Bold" size="77.0" />
+               </font>
+            </Label>
+         </top>
+         <bottom>
+            <GridPane prefHeight="379.0" prefWidth="630.0" BorderPane.alignment="CENTER">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                  <RowConstraints maxHeight="176.0" minHeight="10.0" prefHeight="152.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="176.0" minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="164.0" minHeight="0.0" prefHeight="88.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="160.0" minHeight="10.0" prefHeight="79.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <ImageView fitHeight="143.0" fitWidth="209.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                     <image>
+                        <Image url="@img/user2.jpg" />
+                     </image>
+                  </ImageView>
+                  <GridPane maxWidth="400.0" prefHeight="88.0" prefWidth="362.0" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="300.0" minWidth="10.0" prefWidth="100.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="441.0" minWidth="10.0" prefWidth="250.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <Label alignment="CENTER_RIGHT" prefHeight="41.0" prefWidth="103.0" text="電腦IP:">
+                           <font>
+                              <Font size="31.0" />
+                           </font>
+                        </Label>
+                        <Label alignment="CENTER_RIGHT" prefHeight="40.0" prefWidth="105.0" text="port:" GridPane.rowIndex="1">
+                           <font>
+                              <Font size="31.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="ipTextField" prefHeight="30.0" prefWidth="150.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+                        <TextField fx:id="portTextField" editable="false" prefHeight="30.0" prefWidth="150.0" promptText="16888" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                     </children>
+                  </GridPane>
+                  <GridPane GridPane.rowIndex="3">
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <Button mnemonicParsing="false" onAction="#goLobbyButton" prefHeight="50.0" prefWidth="200.0" text="進入大廳" GridPane.halignment="CENTER" />
+                     </children>
+                  </GridPane>
+                  <HBox prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="1">
+                     <children>
+                        <Label prefHeight="54.0" prefWidth="180.0" text="使用者名稱:">
+                           <font>
+                              <Font size="31.0" />
+                           </font>
+                           <HBox.margin>
+                              <Insets left="100.0" />
+                           </HBox.margin>
+                        </Label>
+                        <TextField fx:id="userNameTextField" prefHeight="30.0" prefWidth="237.0">
+                           <HBox.margin>
+                              <Insets top="15.0" />
+                           </HBox.margin>
+                        </TextField>
+                     </children>
+                  </HBox>
+               </children>
+            </GridPane>
+         </bottom>
+      </BorderPane>
+   </children>
+</AnchorPane>

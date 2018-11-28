@@ -5,14 +5,14 @@ import javafx.scene.layout.*;
 public class ChessBoard {
     public Pane pane;
     public GridPane Grid;
-    public Ground grounds[][] = new Ground[9][10];
-    public Ground targetChess = new Ground();
+    public ChessGround grounds[][] = new ChessGround[9][10];
+    public ChessGround targetChess = new ChessGround();
 
     //    滑鼠點擊
     public EventHandler<MouseEvent> click = new EventHandler<MouseEvent>() {
         @Override
         public void handle(MouseEvent event) {
-            Ground eventChess = (Ground) event.getSource();
+            ChessGround eventChess = (ChessGround) event.getSource();
             if (targetChess.getType() == Chess.None){
                 targetChess = eventChess;
                 System.out.println("Target is " + targetChess.getType() + " now.");
@@ -24,71 +24,41 @@ public class ChessBoard {
                     switch (targetChess.getType()){
                         case King:
                             if (targetChess.getX() + 1 < 6 && targetChess.getX() + 1 == eventChess.getX() && targetChess.getY() == eventChess.getY()){
-                                eventChess.setUpChess(targetChess.getGroup(), Chess.King);
-                                targetChess.setUpChess("", Chess.None);
-                                System.out.println(eventChess.getType() + " move to " + eventChess.getX() + "," + eventChess.getY() + ".");
+                                move(true, eventChess);
                             }else if (targetChess.getX() - 1 > 2 && targetChess.getX() - 1 == eventChess.getX() && targetChess.getY() == eventChess.getY()){
-                                eventChess.setUpChess(targetChess.getGroup(), Chess.King);
-                                targetChess.setUpChess("", Chess.None);
-                                System.out.println(eventChess.getType() + " move to " + eventChess.getX() + "," + eventChess.getY() + ".");
+                                move(true, eventChess);
                             }else if (targetChess.getY() + 1 == eventChess.getY() && targetChess.getX() == eventChess.getX()){
-                                eventChess.setUpChess(targetChess.getGroup(), Chess.King);
-                                targetChess.setUpChess("", Chess.None);
-                                System.out.println(eventChess.getType() + " move to " + eventChess.getX() + "," + eventChess.getY() + ".");
+                                move(true, eventChess);
                             }else if (targetChess.getY() - 1 > 6 && targetChess.getY() - 1 == eventChess.getY() && targetChess.getX() == eventChess.getX()){
-                                eventChess.setUpChess(targetChess.getGroup(), Chess.King);
-                                targetChess.setUpChess("", Chess.None);
-                                System.out.println(eventChess.getType() + " move to " + eventChess.getX() + "," + eventChess.getY() + ".");
+                                move(true, eventChess);
                             }else {
-                                targetChess = new Ground();
-                                System.out.println("Can't move to there.");
-                                System.out.println("And, Target is " + targetChess.getType() + " now.");
+                                move(false, eventChess);
                             }
                             break;
                         case Adviser:
                             if (targetChess.getX() + 1 < 6 && targetChess.getX() + 1 == eventChess.getX() && targetChess.getY() + 1 == eventChess.getY()){
-                                eventChess.setUpChess(targetChess.getGroup(), Chess.Adviser);
-                                targetChess.setUpChess("", Chess.None);
-                                System.out.println(eventChess.getType() + " move to " + eventChess.getX() + "," + eventChess.getY() + ".");
+                                move(true, eventChess);
                             }else if (targetChess.getX() - 1 > 2 && targetChess.getX() - 1 == eventChess.getX() && targetChess.getY() + 1 == eventChess.getY()){
-                                eventChess.setUpChess(targetChess.getGroup(), Chess.Adviser);
-                                targetChess.setUpChess("", Chess.None);
-                                System.out.println(eventChess.getType() + " move to " + eventChess.getX() + "," + eventChess.getY() + ".");
+                                move(true, eventChess);
                             }else if (targetChess.getX() + 1 < 6 && targetChess.getX() + 1 == eventChess.getX() && targetChess.getY() - 1 > 6 && targetChess.getY() - 1 == eventChess.getY()){
-                                eventChess.setUpChess(targetChess.getGroup(), Chess.Adviser);
-                                targetChess.setUpChess("", Chess.None);
-                                System.out.println(eventChess.getType() + " move to " + eventChess.getX() + "," + eventChess.getY() + ".");
+                                move(true, eventChess);
                             }else if (targetChess.getX() - 1 > 2 && targetChess.getX() - 1 == eventChess.getX() && targetChess.getY() - 1 > 6 && targetChess.getY() - 1 == eventChess.getY()){
-                                eventChess.setUpChess(targetChess.getGroup(), Chess.Adviser);
-                                targetChess.setUpChess("", Chess.None);
-                                System.out.println(eventChess.getType() + " move to " + eventChess.getX() + "," + eventChess.getY() + ".");
+                                move(true, eventChess);
                             }else {
-                                targetChess = new Ground();
-                                System.out.println("Can't move to there.");
-                                System.out.println("And, Target is " + targetChess.getType() + " now.");
+                                move(false, eventChess);
                             }
                             break;
                         case Minister:
                             if (targetChess.getX() + 2 == eventChess.getX() && targetChess.getY() + 2 == eventChess.getY() && grounds[targetChess.getX() + 1][targetChess.getY() + 1].getType() == Chess.None){
-                                eventChess.setUpChess(targetChess.getGroup(), Chess.Minister);
-                                targetChess.setUpChess("", Chess.None);
-                                System.out.println(eventChess.getType() + " move to " + eventChess.getX() + "," + eventChess.getY() + ".");
+                                move(true, eventChess);
                             }else if (targetChess.getX() - 2 == eventChess.getX() && targetChess.getY() + 2 == eventChess.getY() && grounds[targetChess.getX() - 1][targetChess.getY() + 1].getType() == Chess.None){
-                                eventChess.setUpChess(targetChess.getGroup(), Chess.Minister);
-                                targetChess.setUpChess("", Chess.None);
-                                System.out.println(eventChess.getType() + " move to " + eventChess.getX() + "," + eventChess.getY() + ".");
+                                move(true, eventChess);
                             }else if (targetChess.getX() + 2 == eventChess.getX() && targetChess.getY() - 2 > 4 && targetChess.getY() - 2 == eventChess.getY() && grounds[targetChess.getX() + 1][targetChess.getY() - 1].getType() == Chess.None){
-                                eventChess.setUpChess(targetChess.getGroup(), Chess.Minister);
-                                targetChess.setUpChess("", Chess.None);
-                                System.out.println(eventChess.getType() + " move to " + eventChess.getX() + "," + eventChess.getY() + ".");
+                                move(true, eventChess);
                             }else if (targetChess.getX() - 2 == eventChess.getX() && targetChess.getY() - 2 > 4 && targetChess.getY() - 2 == eventChess.getY() && grounds[targetChess.getX() - 1][targetChess.getY() - 1].getType() == Chess.None){
-                                eventChess.setUpChess(targetChess.getGroup(), Chess.Minister);
-                                targetChess.setUpChess("", Chess.None);
-                                System.out.println(eventChess.getType() + " move to " + eventChess.getX() + "," + eventChess.getY() + ".");
+                                move(true, eventChess);
                             }else {
-                                targetChess = new Ground();
-                                System.out.println("Can't move to there.");
-                                System.out.println("And, Target is " + targetChess.getType() + " now.");
+                                move(false, eventChess);
                             }
                             break;
                         case Chariots:
@@ -96,26 +66,18 @@ public class ChessBoard {
                                 if (targetChess.getY() > eventChess.getY()){
                                     for (int i = targetChess.getY() - 1; i >= eventChess.getY(); i--){
                                         if (i == eventChess.getY()){
-                                            eventChess.setUpChess(targetChess.getGroup(), Chess.Chariots);
-                                            targetChess.setUpChess("", Chess.None);
-                                            System.out.println(eventChess.getType() + " move to " + eventChess.getX() + "," + eventChess.getY() + ".");
+                                            move(true, eventChess);
                                         }else if (grounds[targetChess.getX()][i].getType() != Chess.None){
-                                            targetChess = new Ground();
-                                            System.out.println("Can't move to there.");
-                                            System.out.println("And, Target is " + targetChess.getType() + " now.");
+                                            move(false, eventChess);
                                             break;
                                         }
                                     }
                                 }else {
                                     for (int i = targetChess.getY() + 1; i <= eventChess.getY(); i++){
                                         if (i == eventChess.getY()){
-                                            eventChess.setUpChess(targetChess.getGroup(), Chess.Chariots);
-                                            targetChess.setUpChess("", Chess.None);
-                                            System.out.println(eventChess.getType() + " move to " + eventChess.getX() + "," + eventChess.getY() + ".");
+                                            move(true, eventChess);
                                         }else if (grounds[targetChess.getX()][i].getType() != Chess.None){
-                                            targetChess = new Ground();
-                                            System.out.println("Can't move to there.");
-                                            System.out.println("And, Target is " + targetChess.getType() + " now.");
+                                            move(false, eventChess);
                                             break;
                                         }
                                     }
@@ -124,73 +86,45 @@ public class ChessBoard {
                                 if (targetChess.getX() > eventChess.getX()){
                                     for (int i = targetChess.getX() - 1; i >= eventChess.getX(); i--){
                                         if (i == eventChess.getX()){
-                                            eventChess.setUpChess(targetChess.getGroup(), Chess.Chariots);
-                                            targetChess.setUpChess("", Chess.None);
-                                            System.out.println(eventChess.getType() + " move to " + eventChess.getX() + "," + eventChess.getY() + ".");
+                                            move(true, eventChess);
                                         }else if (grounds[i][targetChess.getY()].getType() != Chess.None){
-                                            targetChess = new Ground();
-                                            System.out.println("Can't move to there.");
-                                            System.out.println("And, Target is " + targetChess.getType() + " now.");
+                                            move(false, eventChess);
                                             break;
                                         }
                                     }
                                 }else {
                                     for (int i = targetChess.getX() + 1; i <= eventChess.getX(); i++){
                                         if (i == eventChess.getX()){
-                                            eventChess.setUpChess(targetChess.getGroup(), Chess.Chariots);
-                                            targetChess.setUpChess("", Chess.None);
-                                            System.out.println(eventChess.getType() + " move to " + eventChess.getX() + "," + eventChess.getY() + ".");
+                                            move(true, eventChess);
                                         }else if (grounds[i][targetChess.getY()].getType() != Chess.None){
-                                            targetChess = new Ground();
-                                            System.out.println("Can't move to there.");
-                                            System.out.println("And, Target is " + targetChess.getType() + " now.");
+                                            move(false, eventChess);
                                             break;
                                         }
                                     }
                                 }
                             }else {
-                                targetChess = new Ground();
-                                System.out.println("Can't move to there.");
-                                System.out.println("And, Target is " + targetChess.getType() + " now.");
+                                move(false, eventChess);
                             }
                             break;
                         case Knight:
                             if (targetChess.getX() + 2 == eventChess.getX() && targetChess.getY() + 1 == eventChess.getY() && grounds[targetChess.getX() + 1][targetChess.getY()].getType() == Chess.None){
-                                eventChess.setUpChess(targetChess.getGroup(), Chess.Knight);
-                                targetChess.setUpChess("", Chess.None);
-                                System.out.println(eventChess.getType() + " move to " + eventChess.getX() + "," + eventChess.getY() + ".");
+                                move(true, eventChess);
                             }else if (targetChess.getX() + 2 == eventChess.getX() && targetChess.getY() - 1 == eventChess.getY() && grounds[targetChess.getX() + 1][targetChess.getY()].getType() == Chess.None){
-                                eventChess.setUpChess(targetChess.getGroup(), Chess.Knight);
-                                targetChess.setUpChess("", Chess.None);
-                                System.out.println(eventChess.getType() + " move to " + eventChess.getX() + "," + eventChess.getY() + ".");
+                                move(true, eventChess);
                             }else if (targetChess.getX() + 1 == eventChess.getX() && targetChess.getY() + 2 == eventChess.getY() && grounds[targetChess.getX()][targetChess.getY() + 1].getType() == Chess.None){
-                                eventChess.setUpChess(targetChess.getGroup(), Chess.Knight);
-                                targetChess.setUpChess("", Chess.None);
-                                System.out.println(eventChess.getType() + " move to " + eventChess.getX() + "," + eventChess.getY() + ".");
+                                move(true, eventChess);
                             }else if (targetChess.getX() + 1 == eventChess.getX() && targetChess.getY() - 2 == eventChess.getY() && grounds[targetChess.getX()][targetChess.getY() - 1].getType() == Chess.None){
-                                eventChess.setUpChess(targetChess.getGroup(), Chess.Knight);
-                                targetChess.setUpChess("", Chess.None);
-                                System.out.println(eventChess.getType() + " move to " + eventChess.getX() + "," + eventChess.getY() + ".");
+                                move(true, eventChess);
                             }else if (targetChess.getX() - 1 == eventChess.getX() && targetChess.getY() + 2 == eventChess.getY() && grounds[targetChess.getX()][targetChess.getY() + 1].getType() == Chess.None){
-                                eventChess.setUpChess(targetChess.getGroup(), Chess.Knight);
-                                targetChess.setUpChess("", Chess.None);
-                                System.out.println(eventChess.getType() + " move to " + eventChess.getX() + "," + eventChess.getY() + ".");
+                                move(true, eventChess);
                             }else if (targetChess.getX() - 1 == eventChess.getX() && targetChess.getY() - 2 == eventChess.getY() && grounds[targetChess.getX()][targetChess.getY() - 1].getType() == Chess.None){
-                                eventChess.setUpChess(targetChess.getGroup(), Chess.Knight);
-                                targetChess.setUpChess("", Chess.None);
-                                System.out.println(eventChess.getType() + " move to " + eventChess.getX() + "," + eventChess.getY() + ".");
+                                move(true, eventChess);
                             }else if (targetChess.getX() - 2 == eventChess.getX() && targetChess.getY() + 1 == eventChess.getY() && grounds[targetChess.getX() - 1][targetChess.getY()].getType() == Chess.None){
-                                eventChess.setUpChess(targetChess.getGroup(), Chess.Knight);
-                                targetChess.setUpChess("", Chess.None);
-                                System.out.println(eventChess.getType() + " move to " + eventChess.getX() + "," + eventChess.getY() + ".");
+                                move(true, eventChess);
                             }else if (targetChess.getX() - 2 == eventChess.getX() && targetChess.getY() - 1 == eventChess.getY() && grounds[targetChess.getX() - 1][targetChess.getY()].getType() == Chess.None){
-                                eventChess.setUpChess(targetChess.getGroup(), Chess.Knight);
-                                targetChess.setUpChess("", Chess.None);
-                                System.out.println(eventChess.getType() + " move to " + eventChess.getX() + "," + eventChess.getY() + ".");
+                                move(true, eventChess);
                             }else {
-                                targetChess = new Ground();
-                                System.out.println("Can't move to there.");
-                                System.out.println("And, Target is " + targetChess.getType() + " now.");
+                                move(false, eventChess);
                             }
                             break;
                         case Cannon:
@@ -199,29 +133,21 @@ public class ChessBoard {
                                     if (targetChess.getY() > eventChess.getY()){
                                         for (int i = targetChess.getY() - 1; i >= eventChess.getY(); i--){
                                             if (grounds[targetChess.getX()][i].getType() != Chess.None){
-                                                targetChess = new Ground();
-                                                System.out.println("Can't move to there.");
-                                                System.out.println("And, Target is " + targetChess.getType() + " now.");
+                                                move(false, eventChess);
                                                 break;
                                             }
                                             if (i == eventChess.getY()){
-                                                eventChess.setUpChess(targetChess.getGroup(), Chess.Cannon);
-                                                targetChess.setUpChess("", Chess.None);
-                                                System.out.println(eventChess.getType() + " move to " + eventChess.getX() + "," + eventChess.getY() + ".");
+                                                move(true, eventChess);
                                             }
                                         }
                                     }else {
                                         for (int i = targetChess.getY() + 1; i <= eventChess.getY(); i++){
                                             if (grounds[targetChess.getX()][i].getType() != Chess.None){
-                                                targetChess = new Ground();
-                                                System.out.println("Can't move to there.");
-                                                System.out.println("And, Target is " + targetChess.getType() + " now.");
+                                                move(false, eventChess);
                                                 break;
                                             }
                                             if (i == eventChess.getY()){
-                                                eventChess.setUpChess(targetChess.getGroup(), Chess.Cannon);
-                                                targetChess.setUpChess("", Chess.None);
-                                                System.out.println(eventChess.getType() + " move to " + eventChess.getX() + "," + eventChess.getY() + ".");
+                                                move(true, eventChess);
                                             }
                                         }
                                     }
@@ -229,36 +155,26 @@ public class ChessBoard {
                                     if (targetChess.getX() > eventChess.getX()){
                                         for (int i = targetChess.getX() - 1; i >= eventChess.getX(); i--){
                                             if (grounds[i][targetChess.getY()].getType() != Chess.None){
-                                                targetChess = new Ground();
-                                                System.out.println("Can't move to there.");
-                                                System.out.println("And, Target is " + targetChess.getType() + " now.");
+                                                move(false, eventChess);
                                                 break;
                                             }
                                             if (i == eventChess.getX()){
-                                                eventChess.setUpChess(targetChess.getGroup(), Chess.Cannon);
-                                                targetChess.setUpChess("", Chess.None);
-                                                System.out.println(eventChess.getType() + " move to " + eventChess.getX() + "," + eventChess.getY() + ".");
+                                                move(true, eventChess);
                                             }
                                         }
                                     }else {
                                         for (int i = targetChess.getX() + 1; i <= eventChess.getX(); i++){
                                             if (grounds[i][targetChess.getY()].getType() != Chess.None){
-                                                targetChess = new Ground();
-                                                System.out.println("Can't move to there.");
-                                                System.out.println("And, Target is " + targetChess.getType() + " now.");
+                                                move(false, eventChess);
                                                 break;
                                             }
                                             if (i == eventChess.getX()){
-                                                eventChess.setUpChess(targetChess.getGroup(), Chess.Cannon);
-                                                targetChess.setUpChess("", Chess.None);
-                                                System.out.println(eventChess.getType() + " move to " + eventChess.getX() + "," + eventChess.getY() + ".");
+                                                move(true, eventChess);
                                             }
                                         }
                                     }
                                 }else {
-                                    targetChess = new Ground();
-                                    System.out.println("Can't move to there.");
-                                    System.out.println("And, Target is " + targetChess.getType() + " now.");
+                                    move(false, eventChess);
                                 }
                             }else {
                                 int chessNum = 0;
@@ -270,13 +186,9 @@ public class ChessBoard {
                                             }
                                             if (i == eventChess.getY() + 1){
                                                 if (chessNum == 1){
-                                                    eventChess.setUpChess(targetChess.getGroup(), Chess.Cannon);
-                                                    targetChess.setUpChess("", Chess.None);
-                                                    System.out.println(eventChess.getType() + " move to " + eventChess.getX() + "," + eventChess.getY() + ".");
+                                                    move(true, eventChess);
                                                 }else {
-                                                    targetChess = new Ground();
-                                                    System.out.println("Can't move to there.");
-                                                    System.out.println("And, Target is " + targetChess.getType() + " now.");
+                                                    move(false, eventChess);
                                                 }
                                             }
                                         }
@@ -287,13 +199,9 @@ public class ChessBoard {
                                             }
                                             if (i == eventChess.getY() - 1){
                                                 if (chessNum == 1){
-                                                    eventChess.setUpChess(targetChess.getGroup(), Chess.Cannon);
-                                                    targetChess.setUpChess("", Chess.None);
-                                                    System.out.println(eventChess.getType() + " move to " + eventChess.getX() + "," + eventChess.getY() + ".");
+                                                    move(true, eventChess);
                                                 }else {
-                                                    targetChess = new Ground();
-                                                    System.out.println("Can't move to there.");
-                                                    System.out.println("And, Target is " + targetChess.getType() + " now.");
+                                                    move(false, eventChess);
                                                 }
                                             }
                                         }
@@ -306,13 +214,9 @@ public class ChessBoard {
                                             }
                                             if (i == eventChess.getX() + 1){
                                                 if (chessNum == 1){
-                                                    eventChess.setUpChess(targetChess.getGroup(), Chess.Cannon);
-                                                    targetChess.setUpChess("", Chess.None);
-                                                    System.out.println(eventChess.getType() + " move to " + eventChess.getX() + "," + eventChess.getY() + ".");
+                                                    move(true, eventChess);
                                                 }else {
-                                                    targetChess = new Ground();
-                                                    System.out.println("Can't move to there.");
-                                                    System.out.println("And, Target is " + targetChess.getType() + " now.");
+                                                    move(false, eventChess);
                                                 }
                                             }
                                         }
@@ -323,52 +227,34 @@ public class ChessBoard {
                                             }
                                             if (i == eventChess.getX() - 1){
                                                 if (chessNum == 1){
-                                                    eventChess.setUpChess(targetChess.getGroup(), Chess.Cannon);
-                                                    targetChess.setUpChess("", Chess.None);
-                                                    System.out.println(eventChess.getType() + " move to " + eventChess.getX() + "," + eventChess.getY() + ".");
+                                                    move(true, eventChess);
                                                 }else {
-                                                    targetChess = new Ground();
-                                                    System.out.println("Can't move to there.");
-                                                    System.out.println("And, Target is " + targetChess.getType() + " now.");
+                                                    move(false, eventChess);
                                                 }
                                             }
                                         }
                                     }
                                 }else {
-                                    targetChess = new Ground();
-                                    System.out.println("Can't move to there.");
-                                    System.out.println("And, Target is " + targetChess.getType() + " now.");
+                                    move(false, eventChess);
                                 }
                             }
                             break;
                         case Pawn:
                             if (targetChess.getY() > 4){ //未過河
                                 if (targetChess.getX() == eventChess.getX() && targetChess.getY() - 1 == eventChess.getY()){
-                                    eventChess.setUpChess(targetChess.getGroup(), Chess.Pawn);
-                                    targetChess.setUpChess("", Chess.None);
-                                    System.out.println(eventChess.getType() + " move to " + eventChess.getX() + "," + eventChess.getY() + ".");
+                                    move(true, eventChess);
                                 }else {
-                                    targetChess = new Ground();
-                                    System.out.println("Can't move to there.");
-                                    System.out.println("And, Target is " + targetChess.getType() + " now.");
+                                    move(false, eventChess);
                                 }
                             }else {
                                 if (targetChess.getX() + 1 == eventChess.getX() && targetChess.getY() == eventChess.getY()){
-                                    eventChess.setUpChess(targetChess.getGroup(), Chess.Pawn);
-                                    targetChess.setUpChess("", Chess.None);
-                                    System.out.println(eventChess.getType() + " move to " + eventChess.getX() + "," + eventChess.getY() + ".");
+                                    move(true, eventChess);
                                 }else if (targetChess.getX() - 1 == eventChess.getX() && targetChess.getY() == eventChess.getY()){
-                                    eventChess.setUpChess(targetChess.getGroup(), Chess.Pawn);
-                                    targetChess.setUpChess("", Chess.None);
-                                    System.out.println(eventChess.getType() + " move to " + eventChess.getX() + "," + eventChess.getY() + ".");
+                                    move(true, eventChess);
                                 }else if (targetChess.getX() == eventChess.getX() && targetChess.getY() - 1 == eventChess.getY()){
-                                    eventChess.setUpChess(targetChess.getGroup(), Chess.Pawn);
-                                    targetChess.setUpChess("", Chess.None);
-                                    System.out.println(eventChess.getType() + " move to " + eventChess.getX() + "," + eventChess.getY() + ".");
+                                    move(true, eventChess);
                                 }else {
-                                    targetChess = new Ground();
-                                    System.out.println("Can't move to there.");
-                                    System.out.println("And, Target is " + targetChess.getType() + " now.");
+                                    move(false, eventChess);
                                 }
                             }
                             break;
@@ -382,7 +268,7 @@ public class ChessBoard {
 
         for (int i = 0; i < 9; i++){
             for (int j = 0; j < 10; j++){
-                grounds[i][j] = new Ground(i, j);
+                grounds[i][j] = new ChessGround(i, j);
                 grounds[i][j].setOnMouseClicked(click);
                 grounds[i][j].setMaxSize(Integer.MAX_VALUE, Integer.MAX_VALUE);
                 Grid.add(grounds[i][j], i, j);
@@ -434,5 +320,17 @@ public class ChessBoard {
         System.out.println("Game Start!!");
         System.out.println("Original target is " + targetChess.getType() + ".");
 
+    }
+
+    public void move(boolean isMove, ChessGround destination){
+        if (isMove){
+            destination.setUpChess(targetChess.getGroup(), targetChess.getType());
+            targetChess.setUpChess("", Chess.None);
+            System.out.println(destination.getType() + " move to " + destination.getX() + "," + destination.getY() + ".");
+        }else {
+            targetChess = new ChessGround();
+            System.out.println("Can't move to there.");
+            System.out.println("And, Target is " + targetChess.getType() + " now.");
+        }
     }
 }
