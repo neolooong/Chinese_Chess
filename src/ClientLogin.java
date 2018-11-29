@@ -11,12 +11,12 @@ public class ClientLogin {
 
     public void initialize(){
         userNameTextField.setText("蘇家緯");
-//        ipTextField.setText("10.91.1.15");
-        ipTextField.setText("192.168.1.11");
+        ipTextField.setText("10.91.1.15");
+//        ipTextField.setText("192.168.1.11");
     }
 
     public void goLobbyButton() throws IOException {
-        ClientSocket socket = new ClientSocket(ipTextField.getText(), 16888);
+
     }
 
     public Stage getStage() {
