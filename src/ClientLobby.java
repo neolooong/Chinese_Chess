@@ -1,25 +1,142 @@
+import Data.Data;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableView;
-import javafx.scene.layout.VBox;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.layout.GridPane;
+import javafx.stage.Stage;
 
-import java.net.Socket;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.function.Consumer;
+
+// TODO: 2018/12/4 加入房間
 
 public class ClientLobby {
     @FXML
-    private Label userName;
+    private Label playerName;
     @FXML
-    private Button createRoom;
-    @FXML
-    private VBox roomList;
+    private GridPane roomList;
 
-    public void initialize(){
+    public void initialize(){ }
 
+    public void createRoom(ActionEvent event) throws IOException {
+        Data data = new Data(Data.Type.CreateRoom);
+        TextInputDialog roomname = new TextInputDialog();
+        roomname.setHeaderText("");
+        roomname.setContentText("房名: ");
+        roomname.showAndWait().ifPresent(new Consumer<String>() {
+            @Override
+            public void accept(String s) {
+                data.roomName = s;
+                try {
+                    ObjectOutputStream outputStream = new ObjectOutputStream(ClientMain.socket.getOutputStream());
+                    outputStream.writeObject(data);
+                    outputStream.flush();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
-    public void openButton(ActionEvent event) {
+    public void openInputStream(){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    while (true) {
+                        ObjectInputStream inputStream = new ObjectInputStream(ClientMain.socket.getInputStream());
+                        Data data;
+                        data = (Data) inputStream.readObject();
+                        switch (data.type) {
+                            case CreateRoomStatus:
+                                if (data.createRoomRespond.equals("OK")) {
+                                    FXMLLoader loader = new FXMLLoader(getClass().getResource("ChessBoard.fxml"));
+                                    Parent root = loader.load();
+                                    Platform.runLater(() -> {
+                                        Stage stage = new Stage();
+                                        stage.setTitle("象棋靈王八蛋營養大象棋");
+                                        stage.getIcons().add(new Image("img/icon.png"));
+                                        stage.setScene(new Scene(root));
+                                        stage.show();
+                                    });
+                                } else {
+                                    Platform.runLater(() -> {
+                                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                                        alert.setHeaderText("");
+                                        alert.setContentText(data.connectRespond);
+                                        alert.showAndWait();
+                                    });
+                                }
+                                break;
+                            case EnterRoomStatus:
+                                if (data.EnterRoomRespond.equals("OK")){
 
+                                }else {
+                                    Platform.runLater(() -> {
+                                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                                        alert.setHeaderText("");
+                                        alert.setContentText(data.connectRespond);
+                                        alert.showAndWait();
+                                    });
+                                }
+                                break;
+                            case RefreshRoomList:
+                                Platform.runLater(() -> updateRoomList(data.rooms));
+                                break;
+                        }
+                    }
+                }catch (IOException | ClassNotFoundException e){
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+
+    public void setPlayerName(String name){
+        playerName.setText("Your Name: " + name);
+    }
+
+    public void updateRoomList(HashMap<String, String[]> list){
+        roomList.getRowConstraints().remove(1, roomList.getRowConstraints().size() - 1);
+        Iterator<String> iterator = list.keySet().iterator();
+        int rowIndex = 0;
+        while (iterator.hasNext()){
+            rowIndex++;
+            String buffer = iterator.next();
+            Label roomName = new Label(buffer);
+            Label roomHost = new Label(list.get(buffer)[0]);
+            Label roomSeat = new Label(list.get(buffer)[1] == null ? "1/2" : "2/2");
+            Button entryBtn = new Button("加入房間");
+            entryBtn.setDisable(list.get(buffer)[1] != null);
+            entryBtn.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    try {
+                        ObjectOutputStream outputStream = new ObjectOutputStream(ClientMain.socket.getOutputStream());
+                        Data data = new Data(Data.Type.EnterRoom);
+                        data.roomName = roomName.getText();
+                        outputStream.writeObject(data);
+                        outputStream.flush();
+                    }catch (IOException e){
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+            roomList.add(roomName, 0, rowIndex);
+            roomList.add(roomHost, 1, rowIndex);
+            roomList.add(roomSeat, 2, rowIndex);
+            roomList.add(entryBtn, 3, rowIndex);
+        }
     }
 }
