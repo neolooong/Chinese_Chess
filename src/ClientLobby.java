@@ -4,6 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -14,8 +15,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.*;
 import java.util.function.Consumer;
 
 // TODO: 2018/12/4 加入房間
@@ -80,12 +80,21 @@ public class ClientLobby {
                                 break;
                             case EnterRoomStatus:
                                 if (data.EnterRoomRespond.equals("OK")){
-
+                                    Platform.runLater(() -> updateRoomList(data.rooms));
+                                    FXMLLoader loader = new FXMLLoader(getClass().getResource("ChessBoard.fxml"));
+                                    Parent root = loader.load();
+                                    Platform.runLater(() -> {
+                                        Stage stage = new Stage();
+                                        stage.setTitle("象棋靈王八蛋營養大象棋");
+                                        stage.getIcons().add(new Image("img/icon.png"));
+                                        stage.setScene(new Scene(root));
+                                        stage.show();
+                                    });
                                 }else {
                                     Platform.runLater(() -> {
                                         Alert alert = new Alert(Alert.AlertType.ERROR);
                                         alert.setHeaderText("");
-                                        alert.setContentText(data.connectRespond);
+                                        alert.setContentText(data.EnterRoomRespond);
                                         alert.showAndWait();
                                     });
                                 }
@@ -106,8 +115,10 @@ public class ClientLobby {
         playerName.setText("Your Name: " + name);
     }
 
+    public HashSet<Node> roomItem = new HashSet<>();
     public void updateRoomList(HashMap<String, String[]> list){
         roomList.getRowConstraints().remove(1, roomList.getRowConstraints().size() - 1);
+        roomList.getChildren().removeAll(roomItem);
         Iterator<String> iterator = list.keySet().iterator();
         int rowIndex = 0;
         while (iterator.hasNext()){
@@ -132,6 +143,8 @@ public class ClientLobby {
                     }
                 }
             });
+
+            roomItem.addAll(Arrays.asList(roomName, roomHost, roomSeat, entryBtn));
 
             roomList.add(roomName, 0, rowIndex);
             roomList.add(roomHost, 1, rowIndex);

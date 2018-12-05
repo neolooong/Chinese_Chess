@@ -2,24 +2,19 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e0b1cd7f-b2ba-45d4-959f-e886c4f7da36" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/img/icon.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/Data/Data.java" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Chinese_Chess/ClientLobby.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Chinese_Chess/ClientMain.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Chinese_Chess/ServerGame$Player.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Chinese_Chess/ServerGame.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/ServerGame.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Chinese_Chess/ClientLogin.class" afterPath="$PROJECT_DIR$/out/production/Chinese_Chess/ClientLogin.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Chinese_Chess/ServerMain.class" afterPath="$PROJECT_DIR$/out/production/Chinese_Chess/ServerMain.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Chinese_Chess/ServerView$1.class" afterPath="$PROJECT_DIR$/out/production/Chinese_Chess/ServerView$1.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/Data/GameData.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Chinese_Chess/ClientLobby$1.class" afterPath="$PROJECT_DIR$/out/production/Chinese_Chess/ClientLobby$1.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Chinese_Chess/ClientLobby$2.class" afterPath="$PROJECT_DIR$/out/production/Chinese_Chess/ClientLobby$2.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Chinese_Chess/ClientLobby$3.class" afterPath="$PROJECT_DIR$/out/production/Chinese_Chess/ClientLobby$3.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Chinese_Chess/ClientLobby$4.class" afterPath="$PROJECT_DIR$/out/production/Chinese_Chess/ClientLobby$4.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Chinese_Chess/ClientLobby.class" afterPath="$PROJECT_DIR$/out/production/Chinese_Chess/ClientLobby.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Chinese_Chess/Data/Data$Type.class" afterPath="$PROJECT_DIR$/out/production/Chinese_Chess/Data/Data$Type.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Chinese_Chess/Data/Data.class" afterPath="$PROJECT_DIR$/out/production/Chinese_Chess/Data/Data.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Chinese_Chess/ServerView.class" afterPath="$PROJECT_DIR$/out/production/Chinese_Chess/ServerView.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Chinese_Chess/ClientLobby.fxml" afterPath="$PROJECT_DIR$/out/production/Chinese_Chess/ClientLobby.fxml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/ClientLobby.fxml" afterPath="$PROJECT_DIR$/src/ClientLobby.fxml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Chinese_Chess/ChessBoard.fxml" afterPath="$PROJECT_DIR$/out/production/Chinese_Chess/ChessBoard.fxml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/ChessBoard.fxml" afterPath="$PROJECT_DIR$/src/ChessBoard.fxml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/ClientLobby.java" afterPath="$PROJECT_DIR$/src/ClientLobby.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/ClientLogin.java" afterPath="$PROJECT_DIR$/src/ClientLogin.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/ClientMain.java" afterPath="$PROJECT_DIR$/src/ClientMain.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/ServerMain.java" afterPath="$PROJECT_DIR$/src/ServerMain.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/ServerView.java" afterPath="$PROJECT_DIR$/src/ServerView.java" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
@@ -64,14 +59,14 @@
     <favorites_list name="Chinese_Chess" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.2734375">
+    <splitter split-orientation="horizontal" split-proportion="0.1">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
           <file leaf-file-name="Data.java" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/Data/Data.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="560">
-                  <caret line="20" column="35" lean-forward="true" selection-start-line="20" selection-start-column="35" selection-end-line="20" selection-end-column="35" />
+                <state relative-caret-position="542">
+                  <caret line="20" column="35" lean-forward="false" selection-start-line="20" selection-start-column="35" selection-end-line="20" selection-end-column="35" />
                   <folding>
                     <element signature="imports" expanded="true" />
                   </folding>
@@ -79,11 +74,21 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="ServerMain.java" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/ServerMain.java">
+          <file leaf-file-name="GameData.java" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/Data/GameData.java">
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="336">
-                  <caret line="12" column="21" lean-forward="false" selection-start-line="12" selection-start-column="21" selection-end-line="12" selection-end-column="21" />
+                  <caret line="12" column="37" lean-forward="false" selection-start-line="12" selection-start-column="37" selection-end-line="12" selection-end-column="37" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="ServerMain.java" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/src/ServerMain.java">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="392">
+                  <caret line="14" column="0" lean-forward="true" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
                   <folding>
                     <element signature="imports" expanded="true" />
                   </folding>
@@ -91,11 +96,11 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="ServerView.java" pinned="false" current-in-tab="true">
+          <file leaf-file-name="ServerView.java" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/ServerView.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="454">
-                  <caret line="80" column="75" lean-forward="true" selection-start-line="80" selection-start-column="75" selection-end-line="80" selection-end-column="75" />
+                <state relative-caret-position="112">
+                  <caret line="69" column="29" lean-forward="false" selection-start-line="69" selection-start-column="29" selection-end-line="69" selection-end-column="29" />
                   <folding>
                     <element signature="imports" expanded="true" />
                   </folding>
@@ -106,40 +111,71 @@
         </leaf>
       </split-first>
       <split-second>
-        <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
-          <file leaf-file-name="ClientMain.java" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/ClientMain.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="150">
-                  <caret line="23" column="13" lean-forward="false" selection-start-line="23" selection-start-column="13" selection-end-line="23" selection-end-column="13" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="ClientLogin.java" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/ClientLogin.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="274">
-                  <caret line="43" column="36" lean-forward="false" selection-start-line="43" selection-start-column="36" selection-end-line="43" selection-end-column="36" />
-                  <folding>
-                    <element signature="imports" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="ClientLobby.java" pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/src/ClientLobby.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="230">
-                  <caret line="82" column="0" lean-forward="true" selection-start-line="82" selection-start-column="0" selection-end-line="82" selection-end-column="0" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-        </leaf>
+        <splitter split-orientation="horizontal" split-proportion="0.12832195">
+          <split-first>
+            <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
+              <file leaf-file-name="ClientMain.java" pinned="false" current-in-tab="true">
+                <entry file="file://$PROJECT_DIR$/src/ClientMain.java">
+                  <provider selected="true" editor-type-id="text-editor">
+                    <state relative-caret-position="225">
+                      <caret line="17" column="17" lean-forward="true" selection-start-line="17" selection-start-column="17" selection-end-line="17" selection-end-column="17" />
+                      <folding />
+                    </state>
+                  </provider>
+                </entry>
+              </file>
+              <file leaf-file-name="ClientLobby.java" pinned="false" current-in-tab="false">
+                <entry file="file://$PROJECT_DIR$/src/ClientLobby.java">
+                  <provider selected="true" editor-type-id="text-editor">
+                    <state relative-caret-position="71">
+                      <caret line="131" column="24" lean-forward="false" selection-start-line="131" selection-start-column="24" selection-end-line="131" selection-end-column="24" />
+                      <folding />
+                    </state>
+                  </provider>
+                </entry>
+              </file>
+              <file leaf-file-name="ClientLogin.java" pinned="false" current-in-tab="false">
+                <entry file="file://$PROJECT_DIR$/src/ClientLogin.java">
+                  <provider selected="true" editor-type-id="text-editor">
+                    <state relative-caret-position="794">
+                      <caret line="43" column="36" lean-forward="false" selection-start-line="43" selection-start-column="36" selection-end-line="43" selection-end-column="36" />
+                      <folding>
+                        <element signature="imports" expanded="true" />
+                      </folding>
+                    </state>
+                  </provider>
+                </entry>
+              </file>
+            </leaf>
+          </split-first>
+          <split-second>
+            <leaf>
+              <file leaf-file-name="ChessBoard.java" pinned="false" current-in-tab="false">
+                <entry file="file://$PROJECT_DIR$/src/ChessBoard.java">
+                  <provider selected="true" editor-type-id="text-editor">
+                    <state relative-caret-position="221">
+                      <caret line="322" column="5" lean-forward="true" selection-start-line="322" selection-start-column="5" selection-end-line="322" selection-end-column="5" />
+                      <folding />
+                    </state>
+                  </provider>
+                </entry>
+              </file>
+              <file leaf-file-name="ChessBoard.fxml" pinned="false" current-in-tab="true">
+                <entry file="file://$PROJECT_DIR$/src/ChessBoard.fxml">
+                  <provider editor-type-id="JavaFX-Scene-Builder">
+                    <state />
+                  </provider>
+                  <provider selected="true" editor-type-id="text-editor">
+                    <state relative-caret-position="435">
+                      <caret line="100" column="87" lean-forward="true" selection-start-line="100" selection-start-column="87" selection-end-line="100" selection-end-column="87" />
+                      <folding />
+                    </state>
+                  </provider>
+                </entry>
+              </file>
+            </leaf>
+          </split-second>
+        </splitter>
       </split-second>
     </splitter>
   </component>
@@ -158,6 +194,7 @@
       <find>targetChess = new Ground();</find>
       <find>bind</find>
       <find>ObjectInputStream inputStream</find>
+      <find>clear</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -208,6 +245,7 @@
         <option value="$PROJECT_DIR$/src/ClientMain.java" />
         <option value="$PROJECT_DIR$/src/ServerMain.java" />
         <option value="$PROJECT_DIR$/src/Data/Data.java" />
+        <option value="$PROJECT_DIR$/src/Data/ChessData.java" />
         <option value="$PROJECT_DIR$/src/ServerView.java" />
         <option value="$PROJECT_DIR$/src/ClientLobby.java" />
       </list>
@@ -242,6 +280,9 @@
     </navigator>
     <panes>
       <pane id="AndroidView" />
+      <pane id="Scratches" />
+      <pane id="Scope" />
+      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -254,13 +295,16 @@
               <item name="Chinese_Chess" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="Chinese_Chess" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Chinese_Chess" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="Data" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
-      <pane id="Scratches" />
-      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -365,8 +409,8 @@
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="Application.ClientMain" />
-        <item index="1" class="java.lang.String" itemvalue="Application.ServerMain" />
+        <item index="0" class="java.lang.String" itemvalue="Application.ServerMain" />
+        <item index="1" class="java.lang.String" itemvalue="Application.ClientMain" />
         <item index="2" class="java.lang.String" itemvalue="Application.serviceexample" />
         <item index="3" class="java.lang.String" itemvalue="Application.taskexample" />
         <item index="4" class="java.lang.String" itemvalue="Application.ChessMain" />
@@ -409,18 +453,18 @@
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3299356" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25165564" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32915717" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25165564" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32915717" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.15236051" sideWeight="0.49384615" order="4" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.175" sideWeight="0.49384615" order="4" side_tool="false" content_ui="combo" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.14055794" sideWeight="0.5061538" order="3" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -467,28 +511,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_181/javafx-src.zip!/javafx/scene/control/Labeled.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="258">
-          <caret line="422" column="31" lean-forward="true" selection-start-line="422" selection-start-column="31" selection-end-line="422" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/ChessGround.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1036">
-          <caret line="46" column="41" lean-forward="false" selection-start-line="46" selection-start-column="41" selection-end-line="46" selection-end-column="41" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/OpenView.fxml" />
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_181/src.zip!/java/nio/channels/SelectionKey.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-7271">
-          <caret line="112" column="17" lean-forward="false" selection-start-line="112" selection-start-column="7" selection-end-line="112" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/nioexample/Client.java" />
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_181/src.zip!/java/nio/channels/Selector.java">
       <provider selected="true" editor-type-id="text-editor">
@@ -505,13 +527,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/nioexample/Server.java" />
-    <entry file="file://$PROJECT_DIR$/src/ChessBoard.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="7700">
-          <caret line="280" column="53" lean-forward="false" selection-start-line="280" selection-start-column="53" selection-end-line="280" selection-end-column="53" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Data.java" />
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_181/src.zip!/java/lang/Thread.java">
       <provider selected="true" editor-type-id="text-editor">
@@ -583,7 +598,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="280">
           <caret line="10" column="48" lean-forward="true" selection-start-line="10" selection-start-column="48" selection-end-line="10" selection-end-column="48" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -614,14 +628,6 @@
     <entry file="file://$PROJECT_DIR$/src/img/icon.png">
       <provider selected="true" editor-type-id="images">
         <state />
-      </provider>
-    </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_181/javafx-src.zip!/javafx/collections/ObservableList.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="39">
-          <caret line="94" column="44" lean-forward="true" selection-start-line="94" selection-start-column="44" selection-end-line="94" selection-end-column="44" />
-          <folding />
-        </state>
       </provider>
     </entry>
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_181/javafx-src.zip!/javafx/scene/Node.java">
@@ -677,34 +683,87 @@
         </state>
       </provider>
     </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_181/src.zip!/java/util/List.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="600">
-          <caret line="539" column="65" lean-forward="false" selection-start-line="539" selection-start-column="65" selection-end-line="539" selection-end-column="65" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_181/src.zip!/java/net/Socket.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="208">
           <caret line="940" column="24" lean-forward="false" selection-start-line="940" selection-start-column="24" selection-end-line="940" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_181/src.zip!/java/io/InputStream.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="412">
+          <caret line="347" column="58" lean-forward="true" selection-start-line="347" selection-start-column="58" selection-end-line="347" selection-end-column="58" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Data/Data.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="542">
+          <caret line="20" column="35" lean-forward="false" selection-start-line="20" selection-start-column="35" selection-end-line="20" selection-end-column="35" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_181/src.zip!/java/util/List.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="160">
+          <caret line="484" column="0" lean-forward="true" selection-start-line="484" selection-start-column="0" selection-end-line="484" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/ClientMain.java">
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_181/javafx-src.zip!/javafx/scene/layout/GridPane.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="23" column="13" lean-forward="false" selection-start-line="23" selection-start-column="13" selection-end-line="23" selection-end-column="13" />
+        <state relative-caret-position="193">
+          <caret line="1649" column="21" lean-forward="false" selection-start-line="1649" selection-start-column="16" selection-end-line="1649" selection-end-column="21" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_181/javafx-src.zip!/javafx/collections/ObservableList.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="216">
+          <caret line="103" column="16" lean-forward="false" selection-start-line="103" selection-start-column="16" selection-end-line="103" selection-end-column="16" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_181/src.zip!/java/util/HashSet.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1464">
+          <caret line="104" column="11" lean-forward="false" selection-start-line="104" selection-start-column="11" selection-end-line="104" selection-end-column="11" />
+          <folding>
+            <element signature="e#3740#3741#0" expanded="false" />
+            <element signature="e#3777#3778#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Data/GameData.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="336">
+          <caret line="12" column="37" lean-forward="false" selection-start-line="12" selection-start-column="37" selection-end-line="12" selection-end-column="37" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/ServerView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="112">
+          <caret line="69" column="29" lean-forward="false" selection-start-line="69" selection-start-column="29" selection-end-line="69" selection-end-column="29" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/ServerMain.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="336">
-          <caret line="12" column="21" lean-forward="false" selection-start-line="12" selection-start-column="21" selection-end-line="12" selection-end-column="21" />
+        <state relative-caret-position="392">
+          <caret line="14" column="0" lean-forward="true" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -713,36 +772,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/ClientLogin.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="274">
+        <state relative-caret-position="794">
           <caret line="43" column="36" lean-forward="false" selection-start-line="43" selection-start-column="36" selection-end-line="43" selection-end-column="36" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_181/src.zip!/java/io/InputStream.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="412">
-          <caret line="347" column="58" lean-forward="true" selection-start-line="347" selection-start-column="58" selection-end-line="347" selection-end-column="58" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Data/Data.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="560">
-          <caret line="20" column="35" lean-forward="true" selection-start-line="20" selection-start-column="35" selection-end-line="20" selection-end-column="35" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/ServerView.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="454">
-          <caret line="80" column="75" lean-forward="true" selection-start-line="80" selection-start-column="75" selection-end-line="80" selection-end-column="75" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -751,8 +782,35 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/ClientLobby.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="230">
-          <caret line="82" column="0" lean-forward="true" selection-start-line="82" selection-start-column="0" selection-end-line="82" selection-end-column="0" />
+        <state relative-caret-position="71">
+          <caret line="131" column="24" lean-forward="false" selection-start-line="131" selection-start-column="24" selection-end-line="131" selection-end-column="24" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/ClientMain.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="225">
+          <caret line="17" column="17" lean-forward="true" selection-start-line="17" selection-start-column="17" selection-end-line="17" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/ChessBoard.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="221">
+          <caret line="322" column="5" lean-forward="true" selection-start-line="322" selection-start-column="5" selection-end-line="322" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/ChessBoard.fxml">
+      <provider editor-type-id="JavaFX-Scene-Builder">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="435">
+          <caret line="100" column="87" lean-forward="true" selection-start-line="100" selection-start-column="87" selection-end-line="100" selection-end-column="87" />
           <folding />
         </state>
       </provider>

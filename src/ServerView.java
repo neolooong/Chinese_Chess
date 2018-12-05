@@ -70,18 +70,27 @@ public class ServerView {
                                         break;
                                     case EnterRoom:
                                         String people[] = rooms.get(data.roomName);
-                                        if (people[1] == null) {
-                                            people[1] = playerName;
-                                            data = new Data(Data.Type.EnterRoomStatus);
-                                            data.EnterRoomRespond = "OK";
-                                            outputStream.writeObject(data);
-                                            outputStream.flush();
+                                        if (!people[0].equals(playerName)){
+                                            if (people[1] == null) {
+                                                people[1] = playerName;
+                                                data = new Data(Data.Type.EnterRoomStatus);
+                                                data.EnterRoomRespond = "OK";
+                                                data.rooms = rooms;
+                                                outputStream.writeObject(data);
+                                                outputStream.flush();
+                                            }else {
+                                                data = new Data(Data.Type.EnterRoomStatus);
+                                                data.EnterRoomRespond = "不玩第三";
+                                                outputStream.writeObject(data);
+                                                outputStream.flush();
+                                            }
                                         }else {
                                             data = new Data(Data.Type.EnterRoomStatus);
-                                            data.EnterRoomRespond = "不玩第三";
+                                            data.EnterRoomRespond = "沒朋友只能自己跟自己玩 可憐";
                                             outputStream.writeObject(data);
                                             outputStream.flush();
                                         }
+                                        break;
                                 }
                             } catch (IOException | ClassNotFoundException e) {
                                 players.remove(playerName);
