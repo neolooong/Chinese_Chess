@@ -11,6 +11,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -19,6 +20,7 @@ import java.util.*;
 import java.util.function.Consumer;
 
 public class ClientLobby {
+    private ClientManager manager;
     @FXML
     private Label playerName;
     @FXML
@@ -58,13 +60,30 @@ public class ClientLobby {
                         switch (data.type) {
                             case CreateRoomStatus:
                                 if (data.createRoomRespond.equals("OK")) {
+                                    String roomname = data.roomName;
                                     FXMLLoader loader = new FXMLLoader(getClass().getResource("ChessBoard.fxml"));
                                     Parent root = loader.load();
+                                    ChessBoard chessBoard = loader.getController();
+                                    chessBoard.setRoomName(roomname);
                                     Platform.runLater(() -> {
                                         Stage stage = new Stage();
                                         stage.setTitle("象棋靈王八蛋營養大象棋");
                                         stage.getIcons().add(new Image("img/icon.png"));
                                         stage.setScene(new Scene(root));
+                                        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+                                            @Override
+                                            public void handle(WindowEvent event) {
+                                                try {
+                                                    ObjectOutputStream outputStream = new ObjectOutputStream(ClientMain.socket.getOutputStream());
+                                                    Data data = new Data(Data.Type.QuitRoom);
+                                                    data.roomName = roomname;
+                                                    outputStream.writeObject(data);
+                                                    outputStream.flush();
+                                                } catch (IOException e) {
+                                                    e.printStackTrace();
+                                                }
+                                            }
+                                        });
                                         stage.show();
                                     });
                                 } else {
@@ -77,22 +96,38 @@ public class ClientLobby {
                                 }
                                 break;
                             case EnterRoomStatus:
-                                if (data.EnterRoomRespond.equals("OK")){
-                                    Platform.runLater(() -> updateRoomList(data.rooms));
+                                if (data.enterRoomRespond.equals("OK")){
+                                    String roomname = data.roomName;
                                     FXMLLoader loader = new FXMLLoader(getClass().getResource("ChessBoard.fxml"));
                                     Parent root = loader.load();
+                                    ChessBoard chessBoard = loader.getController();
+                                    chessBoard.setRoomName(roomname);
                                     Platform.runLater(() -> {
                                         Stage stage = new Stage();
                                         stage.setTitle("象棋靈王八蛋營養大象棋");
                                         stage.getIcons().add(new Image("img/icon.png"));
                                         stage.setScene(new Scene(root));
+                                        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+                                            @Override
+                                            public void handle(WindowEvent event) {
+                                                try {
+                                                    ObjectOutputStream outputStream = new ObjectOutputStream(ClientMain.socket.getOutputStream());
+                                                    Data data = new Data(Data.Type.QuitRoom);
+                                                    data.roomName = roomname;
+                                                    outputStream.writeObject(data);
+                                                    outputStream.flush();
+                                                } catch (IOException e) {
+                                                    e.printStackTrace();
+                                                }
+                                            }
+                                        });
                                         stage.show();
                                     });
                                 }else {
                                     Platform.runLater(() -> {
                                         Alert alert = new Alert(Alert.AlertType.ERROR);
                                         alert.setHeaderText("");
-                                        alert.setContentText(data.EnterRoomRespond);
+                                        alert.setContentText(data.enterRoomRespond);
                                         alert.showAndWait();
                                     });
                                 }
@@ -149,5 +184,9 @@ public class ClientLobby {
             roomList.add(roomSeat, 2, rowIndex);
             roomList.add(entryBtn, 3, rowIndex);
         }
+    }
+
+    public void setClientManager(ClientManager manager) {
+        this.manager = manager;
     }
 }

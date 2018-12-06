@@ -13,26 +13,27 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 public class ClientLogin {
+    private ClientManager manager;
     private Stage stage;
     @FXML
     private TextField userNameTextField ,ipTextField , portTextField;
 
     public void initialize(){
         userNameTextField.setText("蘇家緯");
-//        ipTextField.setText("10.91.1.15");
-        ipTextField.setText("10.51.3.203");
+        ipTextField.setText("10.91.1.15");
+//        ipTextField.setText("10.51.3.203");
         portTextField.setText("16888");
     }
 
-    public void goLobbyButton() throws IOException, ClassNotFoundException {
+    public void goLobbyButton() throws IOException, ClassNotFoundException, InterruptedException {
         ClientMain.socket = new Socket(ipTextField.getText(), 16888);
         ObjectOutputStream outputStream = new ObjectOutputStream(ClientMain.socket.getOutputStream());
-        ObjectInputStream inputStream = new ObjectInputStream(ClientMain.socket.getInputStream());
         Data data;
         data = new Data(Data.Type.Connect);
         data.playerName = userNameTextField.getText();
         outputStream.writeObject(data);
         outputStream.flush();
+        ObjectInputStream inputStream = new ObjectInputStream(ClientMain.socket.getInputStream());
         data = (Data) inputStream.readObject();
         if (data.connectRespond.equals("OK")){
 
@@ -62,5 +63,9 @@ public class ClientLogin {
 
     public void setStage(Stage stage) {
         this.stage = stage;
+    }
+
+    public void setClientManager(ClientManager manager) {
+        this.manager = manager;
     }
 }

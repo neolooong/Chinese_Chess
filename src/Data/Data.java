@@ -5,7 +5,7 @@ import java.util.HashMap;
 
 public class Data implements Serializable{
     public enum Type{
-        Connect, ConnectStatus, CreateRoom, CreateRoomStatus, RefreshRoomList, EnterRoom, EnterRoomStatus
+        Connect, ConnectStatus, CreateRoom, CreateRoomStatus, RefreshRoomList, EnterRoom, EnterRoomStatus, QuitRoom
     }
 
     public Type type;
@@ -18,7 +18,7 @@ public class Data implements Serializable{
 
     public HashMap<String, String[]> rooms;
 
-    public String EnterRoomRespond;
+    public String enterRoomRespond;
 
     public Data(Type type){
         this.type = type;

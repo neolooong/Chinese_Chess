@@ -14,6 +14,8 @@ public class ClientMain extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
 
+        ClientManager manager = new ClientManager();
+
         FXMLLoader fload = new FXMLLoader(getClass().getResource("ClientLogin.fxml"));
         Parent par = fload.load();
 

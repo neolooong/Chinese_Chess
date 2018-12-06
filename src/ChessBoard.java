@@ -1,8 +1,12 @@
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 
 public class ChessBoard {
+    public Label roomName;
+
     public Pane pane;
     public GridPane Grid;
     public ChessGround grounds[][] = new ChessGround[9][10];
@@ -265,7 +269,6 @@ public class ChessBoard {
     };
 
     public void initialize(){
-
         for (int i = 0; i < 9; i++){
             for (int j = 0; j < 10; j++){
                 grounds[i][j] = new ChessGround(i, j);
@@ -275,50 +278,50 @@ public class ChessBoard {
             }
         }
 
-        grounds[0][6].setUpChess("black", Chess.Pawn);
-        grounds[2][6].setUpChess("black", Chess.Pawn);
-        grounds[4][6].setUpChess("black", Chess.Pawn);
-        grounds[6][6].setUpChess("black", Chess.Pawn);
-        grounds[8][6].setUpChess("black", Chess.Pawn);
-
-        grounds[1][7].setUpChess("black", Chess.Cannon);
-        grounds[7][7].setUpChess("black", Chess.Cannon);
-
-        grounds[0][9].setUpChess("black", Chess.Chariots);
-        grounds[1][9].setUpChess("black", Chess.Knight);
-        grounds[2][9].setUpChess("black", Chess.Minister);
-        grounds[3][9].setUpChess("black", Chess.Adviser);
-        grounds[4][9].setUpChess("black", Chess.King);
-        grounds[5][9].setUpChess("black", Chess.Adviser);
-        grounds[6][9].setUpChess("black", Chess.Minister);
-        grounds[7][9].setUpChess("black", Chess.Knight);
-        grounds[8][9].setUpChess("black", Chess.Chariots);
-
-
-
-        grounds[0][3].setUpChess("red", Chess.Pawn);
-        grounds[2][3].setUpChess("red", Chess.Pawn);
-        grounds[4][3].setUpChess("red", Chess.Pawn);
-        grounds[6][3].setUpChess("red", Chess.Pawn);
-        grounds[8][3].setUpChess("red", Chess.Pawn);
-
-        grounds[1][2].setUpChess("red", Chess.Cannon);
-        grounds[7][2].setUpChess("red", Chess.Cannon);
-
-        grounds[0][0].setUpChess("red", Chess.Chariots);
-        grounds[1][0].setUpChess("red", Chess.Knight);
-        grounds[2][0].setUpChess("red", Chess.Minister);
-        grounds[3][0].setUpChess("red", Chess.Adviser);
-        grounds[4][0].setUpChess("red", Chess.King);
-        grounds[5][0].setUpChess("red", Chess.Adviser);
-        grounds[6][0].setUpChess("red", Chess.Minister);
-        grounds[7][0].setUpChess("red", Chess.Knight);
-        grounds[8][0].setUpChess("red", Chess.Chariots);
-
-
-
-        System.out.println("Game Start!!");
-        System.out.println("Original target is " + targetChess.getType() + ".");
+//        grounds[0][6].setUpChess("black", Chess.Pawn);
+//        grounds[2][6].setUpChess("black", Chess.Pawn);
+//        grounds[4][6].setUpChess("black", Chess.Pawn);
+//        grounds[6][6].setUpChess("black", Chess.Pawn);
+//        grounds[8][6].setUpChess("black", Chess.Pawn);
+//
+//        grounds[1][7].setUpChess("black", Chess.Cannon);
+//        grounds[7][7].setUpChess("black", Chess.Cannon);
+//
+//        grounds[0][9].setUpChess("black", Chess.Chariots);
+//        grounds[1][9].setUpChess("black", Chess.Knight);
+//        grounds[2][9].setUpChess("black", Chess.Minister);
+//        grounds[3][9].setUpChess("black", Chess.Adviser);
+//        grounds[4][9].setUpChess("black", Chess.King);
+//        grounds[5][9].setUpChess("black", Chess.Adviser);
+//        grounds[6][9].setUpChess("black", Chess.Minister);
+//        grounds[7][9].setUpChess("black", Chess.Knight);
+//        grounds[8][9].setUpChess("black", Chess.Chariots);
+//
+//
+//
+//        grounds[0][3].setUpChess("red", Chess.Pawn);
+//        grounds[2][3].setUpChess("red", Chess.Pawn);
+//        grounds[4][3].setUpChess("red", Chess.Pawn);
+//        grounds[6][3].setUpChess("red", Chess.Pawn);
+//        grounds[8][3].setUpChess("red", Chess.Pawn);
+//
+//        grounds[1][2].setUpChess("red", Chess.Cannon);
+//        grounds[7][2].setUpChess("red", Chess.Cannon);
+//
+//        grounds[0][0].setUpChess("red", Chess.Chariots);
+//        grounds[1][0].setUpChess("red", Chess.Knight);
+//        grounds[2][0].setUpChess("red", Chess.Minister);
+//        grounds[3][0].setUpChess("red", Chess.Adviser);
+//        grounds[4][0].setUpChess("red", Chess.King);
+//        grounds[5][0].setUpChess("red", Chess.Adviser);
+//        grounds[6][0].setUpChess("red", Chess.Minister);
+//        grounds[7][0].setUpChess("red", Chess.Knight);
+//        grounds[8][0].setUpChess("red", Chess.Chariots);
+//
+//
+//
+//        System.out.println("Game Start!!");
+//        System.out.println("Original target is " + targetChess.getType() + ".");
 
     }
 
@@ -332,5 +335,13 @@ public class ChessBoard {
             System.out.println("Can't move to there.");
             System.out.println("And, Target is " + targetChess.getType() + " now.");
         }
+    }
+
+    public void startBtn(ActionEvent event) {
+
+    }
+
+    public void setRoomName(String roomName) {
+        this.roomName.setText("房間名稱: " + roomName);
     }
 }
