@@ -18,8 +18,6 @@ import java.io.ObjectOutputStream;
 import java.util.*;
 import java.util.function.Consumer;
 
-// TODO: 2018/12/4 加入房間
-
 public class ClientLobby {
     @FXML
     private Label playerName;
