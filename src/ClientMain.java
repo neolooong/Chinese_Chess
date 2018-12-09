@@ -1,32 +1,21 @@
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
-import java.net.Socket;
-
 public class ClientMain extends Application {
-
-    public static Socket socket;
 
     @Override
     public void start(Stage primaryStage) throws Exception{
 
         ClientManager manager = new ClientManager();
 
-        FXMLLoader fload = new FXMLLoader(getClass().getResource("ClientLogin.fxml"));
-        Parent par = fload.load();
+        manager.setStage(primaryStage);
 
-        ClientLogin login = fload.getController();
-        login.setStage(primaryStage);
-
-        primaryStage.setScene(new Scene(par));
+        primaryStage.setScene(new Scene(manager.getLoginRoot()));
         primaryStage.setTitle("登入器");
         primaryStage.getIcons().add(new Image("img/icon.png"));
         primaryStage.setResizable(false);
-        par.getStylesheets().add(ClientMain.class.getResource("Login.css").toExternalForm());
         primaryStage.show();
     }
 

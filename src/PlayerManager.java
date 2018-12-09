@@ -1,4 +1,4 @@
-import Data.Data;
+import Datas.Data;
 import javafx.application.Platform;
 
 import java.io.IOException;
@@ -34,6 +34,7 @@ public class PlayerManager {
                             if (!playerMap.containsKey(playername)) {
                                 playerMap.put(playername, socket);
                                 respond2player(socket, Data.Type.ConnectStatus, "OK", null);
+                                respond2player(socket, Data.Type.RefreshRoomList, null, null);
                                 Platform.runLater(() -> serverView.updatePlayerList());
                             } else {
                                 respond2player(socket, Data.Type.ConnectStatus, "名稱重複了", null);
@@ -81,7 +82,7 @@ public class PlayerManager {
                     }
                 }
             } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
+//                e.printStackTrace();
                 sockets.remove(socket);
                 playerMap.remove(playername);
                 Platform.runLater(() -> serverView.updatePlayerList());
@@ -101,7 +102,6 @@ public class PlayerManager {
         switch (type){
             case ConnectStatus:
                 data.connectRespond = message;
-                data.rooms = (message.equals("OK")) ? gameManager.getRoomMap() : null;
                 outputStream.writeObject(data);
                 outputStream.flush();
                 break;

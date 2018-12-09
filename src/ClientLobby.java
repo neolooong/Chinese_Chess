@@ -1,21 +1,12 @@
-import Data.Data;
-import javafx.application.Platform;
+import Datas.Data;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
-import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.*;
 import java.util.function.Consumer;
 
@@ -29,119 +20,19 @@ public class ClientLobby {
     public void initialize(){ }
 
     public void createRoom(ActionEvent event) throws IOException {
-        Data data = new Data(Data.Type.CreateRoom);
         TextInputDialog roomname = new TextInputDialog();
         roomname.setHeaderText("");
         roomname.setContentText("房名: ");
         roomname.showAndWait().ifPresent(new Consumer<String>() {
             @Override
             public void accept(String s) {
-                data.roomName = s;
                 try {
-                    ObjectOutputStream outputStream = new ObjectOutputStream(ClientMain.socket.getOutputStream());
-                    outputStream.writeObject(data);
-                    outputStream.flush();
+                    manager.request2server(Data.Type.CreateRoom, null, s);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
         });
-    }
-
-    public void openInputStream(){
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    while (true) {
-                        ObjectInputStream inputStream = new ObjectInputStream(ClientMain.socket.getInputStream());
-                        Data data;
-                        data = (Data) inputStream.readObject();
-                        switch (data.type) {
-                            case CreateRoomStatus:
-                                if (data.createRoomRespond.equals("OK")) {
-                                    String roomname = data.roomName;
-                                    FXMLLoader loader = new FXMLLoader(getClass().getResource("ChessBoard.fxml"));
-                                    Parent root = loader.load();
-                                    ChessBoard chessBoard = loader.getController();
-                                    chessBoard.setRoomName(roomname);
-                                    Platform.runLater(() -> {
-                                        Stage stage = new Stage();
-                                        stage.setTitle("象棋靈王八蛋營養大象棋");
-                                        stage.getIcons().add(new Image("img/icon.png"));
-                                        stage.setScene(new Scene(root));
-                                        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-                                            @Override
-                                            public void handle(WindowEvent event) {
-                                                try {
-                                                    ObjectOutputStream outputStream = new ObjectOutputStream(ClientMain.socket.getOutputStream());
-                                                    Data data = new Data(Data.Type.QuitRoom);
-                                                    data.roomName = roomname;
-                                                    outputStream.writeObject(data);
-                                                    outputStream.flush();
-                                                } catch (IOException e) {
-                                                    e.printStackTrace();
-                                                }
-                                            }
-                                        });
-                                        stage.show();
-                                    });
-                                } else {
-                                    Platform.runLater(() -> {
-                                        Alert alert = new Alert(Alert.AlertType.ERROR);
-                                        alert.setHeaderText("");
-                                        alert.setContentText(data.connectRespond);
-                                        alert.showAndWait();
-                                    });
-                                }
-                                break;
-                            case EnterRoomStatus:
-                                if (data.enterRoomRespond.equals("OK")){
-                                    String roomname = data.roomName;
-                                    FXMLLoader loader = new FXMLLoader(getClass().getResource("ChessBoard.fxml"));
-                                    Parent root = loader.load();
-                                    ChessBoard chessBoard = loader.getController();
-                                    chessBoard.setRoomName(roomname);
-                                    Platform.runLater(() -> {
-                                        Stage stage = new Stage();
-                                        stage.setTitle("象棋靈王八蛋營養大象棋");
-                                        stage.getIcons().add(new Image("img/icon.png"));
-                                        stage.setScene(new Scene(root));
-                                        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-                                            @Override
-                                            public void handle(WindowEvent event) {
-                                                try {
-                                                    ObjectOutputStream outputStream = new ObjectOutputStream(ClientMain.socket.getOutputStream());
-                                                    Data data = new Data(Data.Type.QuitRoom);
-                                                    data.roomName = roomname;
-                                                    outputStream.writeObject(data);
-                                                    outputStream.flush();
-                                                } catch (IOException e) {
-                                                    e.printStackTrace();
-                                                }
-                                            }
-                                        });
-                                        stage.show();
-                                    });
-                                }else {
-                                    Platform.runLater(() -> {
-                                        Alert alert = new Alert(Alert.AlertType.ERROR);
-                                        alert.setHeaderText("");
-                                        alert.setContentText(data.enterRoomRespond);
-                                        alert.showAndWait();
-                                    });
-                                }
-                                break;
-                            case RefreshRoomList:
-                                Platform.runLater(() -> updateRoomList(data.rooms));
-                                break;
-                        }
-                    }
-                }catch (IOException | ClassNotFoundException e){
-                    e.printStackTrace();
-                }
-            }
-        }).start();
     }
 
     public void setPlayerName(String name){
@@ -166,11 +57,7 @@ public class ClientLobby {
                 @Override
                 public void handle(ActionEvent event) {
                     try {
-                        ObjectOutputStream outputStream = new ObjectOutputStream(ClientMain.socket.getOutputStream());
-                        Data data = new Data(Data.Type.EnterRoom);
-                        data.roomName = roomName.getText();
-                        outputStream.writeObject(data);
-                        outputStream.flush();
+                        manager.request2server(Data.Type.EnterRoom, null, roomName.getText());
                     }catch (IOException e){
                         e.printStackTrace();
                     }
