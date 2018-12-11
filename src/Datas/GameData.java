@@ -5,7 +5,7 @@ import java.io.Serializable;
 public class GameData implements Serializable {
 
     public enum Behavior{
-        Register, CheckIn, CheckOut, ServerMessage, Ready, GameStart, Move, UnMove, Surrender, GameEnd
+        Register, CheckIn, CheckOut, ServerMessage, Ready, GameStart, Move, RequestUnMove, PermitUnMove, RejectUnMove, Surrender, GameEnd
     }
 //    必填
     public String roomName;     //房間名稱

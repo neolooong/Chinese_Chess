@@ -64,6 +64,15 @@ public class GameManager {
                         case Move:
                             send2player(data);
                             break;
+                        case RequestUnMove:
+                            send2player(data);
+                            break;
+                        case PermitUnMove:
+                            send2player(data);
+                            break;
+                        case RejectUnMove:
+                            send2player(data);
+                            break;
                         case GameEnd:
                             send2player(data);
                             roomReadyStatus.replace(data.roomName, 0);
@@ -164,7 +173,9 @@ public class GameManager {
 
 //    進入房間
     public synchronized boolean enterRoom(String roomname, String playername){
-        if (roomMap.get(roomname)[1] != null){
+        System.out.println(roomMap.get(roomname)[0]);
+        System.out.println(playername);
+        if (roomMap.get(roomname)[1] != null || roomMap.get(roomname)[0].equals(playername)){
             return false;
         }else {
             roomMap.get(roomname)[1] = playername;

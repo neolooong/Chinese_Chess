@@ -7,7 +7,7 @@ import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 
-// TODO: 2018/12/8 悔棋
+import java.util.LinkedList;
 
 public class ChessBoard {
     public String roomname;
@@ -22,6 +22,7 @@ public class ChessBoard {
     public GridPane Grid;
     public ChessGround grounds[][] = new ChessGround[9][10];
     public ChessGround targetChess = new ChessGround();
+    public LinkedList<ChessBoardRecord> history = new LinkedList<>();
 
     //    滑鼠點擊
     public EventHandler<MouseEvent> click = new EventHandler<MouseEvent>() {
@@ -312,8 +313,10 @@ public class ChessBoard {
     public void move(boolean isMove, ChessGround destination){
         if (isMove){
             isUTurn = false;
+            ChessBoardRecord record = new ChessBoardRecord(new int[]{targetChess.getX(), targetChess.getY()}, new int[]{destination.getX(), destination.getY()}, destination.getGroup(), destination.getType());
             destination.setUpChess(targetChess.getGroup(), targetChess.getType());
             targetChess.setUpChess("", Chess.None);
+            history.addLast(record);
             if (isWin()){
                 System.out.println("Congratulation!! You win the game.");
                 manager.request2server(roomname, GameData.Behavior.GameEnd, null, null);
@@ -337,9 +340,21 @@ public class ChessBoard {
         isUTurn = true;
         from = rotate(from);
         to = rotate(to);
+        ChessBoardRecord record = new ChessBoardRecord(from, to, grounds[to[0]][to[1]].getGroup(), grounds[to[0]][to[1]].getType());
         grounds[to[0]][to[1]].setUpChess(grounds[from[0]][from[1]].getGroup(), grounds[from[0]][from[1]].getType());
         grounds[from[0]][from[1]].setUpChess("", Chess.None);
+        history.addLast(record);
         System.out.println(grounds[to[0]][to[1]].getType() + " move to " + from[0] + "," + from[1] + ".");
+    }
+
+    public void unMove(){
+        isUTurn = !isUTurn;
+        ChessBoardRecord record = history.removeLast();
+        int from[] = record.getFrom();
+        int to[] = record.getTo();
+        grounds[from[0]][from[1]].setUpChess(grounds[to[0]][to[1]].getGroup(), grounds[to[0]][to[1]].getType());
+        grounds[to[0]][to[1]].setUpChess(record.getGroup(), record.getDeadChess());
+        System.out.println("UnMove Complete");
     }
 
     public int[] rotate(int p[]){
@@ -450,6 +465,7 @@ public class ChessBoard {
                 grounds[i][j].setUpChess("", Chess.None);
             }
         }
+        history = new LinkedList<>();
     }
 
     public void setManager(ChessBoardManager manager) {
@@ -465,8 +481,8 @@ public class ChessBoard {
         this.order = order;
     }
 
-    public void requestPreviousMoveBtn(ActionEvent event) {
-
+    public void requestUnMoveBtn(ActionEvent event) {
+        manager.request2server(roomname, GameData.Behavior.RequestUnMove, null, null);
     }
 
     public void surrenderBtn(ActionEvent event) {

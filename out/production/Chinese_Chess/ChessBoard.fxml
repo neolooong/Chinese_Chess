@@ -111,7 +111,7 @@
               </rowConstraints>
                <children>
                   <Button fx:id="readyBtn" mnemonicParsing="false" onAction="#readyBtn" prefHeight="50.0" prefWidth="100.0" text="準備" />
-                  <Button fx:id="requestPreviousMoveBtn" disable="true" mnemonicParsing="false" onAction="#requestPreviousMoveBtn" prefHeight="50.0" prefWidth="100.0" text="悔棋" GridPane.columnIndex="1" />
+                  <Button fx:id="requestPreviousMoveBtn" disable="true" mnemonicParsing="false" onAction="#requestUnMoveBtn" prefHeight="50.0" prefWidth="100.0" text="悔棋" GridPane.columnIndex="1" />
                   <Button fx:id="surrenderBtn" disable="true" mnemonicParsing="false" onAction="#surrenderBtn" prefHeight="50.0" prefWidth="100.0" text="投降" GridPane.columnIndex="2" />
                </children>
             </GridPane>

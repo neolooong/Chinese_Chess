@@ -19,7 +19,7 @@ public class ChessBoardManager {
     private static int port = 12345;
     public Socket socket;
     private ClientManager clientManager;
-    private HashSet<ChessBoard> chessBoards = new HashSet<>();
+    public HashSet<ChessBoard> chessBoards = new HashSet<>();
     private String name;
 
     ChessBoardManager (){}
@@ -90,6 +90,44 @@ public class ChessBoardManager {
                                 }
                             }
                             break;
+                        case RequestUnMove:
+                            for (ChessBoard board:chessBoards){
+                                if (board.roomname.equals(data.roomName)){
+                                    Platform.runLater(() -> {
+                                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                                        alert.setHeaderText("");
+                                        alert.setContentText("Your opponent request to unMove..");
+                                        if (alert.showAndWait().isPresent()){
+                                            request2server(board.roomname, GameData.Behavior.PermitUnMove, null, null);
+                                            board.unMove();
+                                        }else {
+                                            request2server(board.roomname, GameData.Behavior.RejectUnMove, null, null);
+                                        }
+                                    });
+                                }
+                            }
+                            break;
+                        case PermitUnMove:
+                            for (ChessBoard board:chessBoards){
+                                if (board.roomname.equals(data.roomName)){
+                                    Platform.runLater(() -> {
+                                            board.unMove();
+                                    });
+                                }
+                            }
+                            break;
+                        case RejectUnMove:
+                            for (ChessBoard board:chessBoards){
+                                if (board.roomname.equals(data.roomName)){
+                                    Platform.runLater(() -> {
+                                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                                        alert.setHeaderText("");
+                                        alert.setContentText("Your opponent reject to you..");
+                                        alert.showAndWait();
+                                    });
+                                }
+                            }
+                            break;
                         case GameEnd:
                             for (ChessBoard board:chessBoards){
                                 if (board.roomname.equals(data.roomName)){
@@ -115,6 +153,7 @@ public class ChessBoardManager {
                                     });
                                 }
                             }
+                            break;
                     }
                 }
             } catch (IOException | ClassNotFoundException e) {
@@ -147,6 +186,18 @@ public class ChessBoardManager {
                     outputStream.flush();
                     break;
                 case GameEnd:
+                    outputStream.writeObject(data);
+                    outputStream.flush();
+                    break;
+                case RequestUnMove:
+                    outputStream.writeObject(data);
+                    outputStream.flush();
+                    break;
+                case PermitUnMove:
+                    outputStream.writeObject(data);
+                    outputStream.flush();
+                    break;
+                case RejectUnMove:
                     outputStream.writeObject(data);
                     outputStream.flush();
                     break;

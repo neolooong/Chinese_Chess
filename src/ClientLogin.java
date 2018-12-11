@@ -1,7 +1,11 @@
 import Datas.Data;
+import Datas.GameData;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
+import javafx.stage.WindowEvent;
 
+import java.beans.EventHandler;
 import java.io.IOException;
 
 public class ClientLogin {
@@ -23,6 +27,17 @@ public class ClientLogin {
         manager.request2server(Data.Type.Connect, userNameTextField.getText(), null);
 
         manager.setName(userNameTextField.getText());
+
+        manager.getStage().setOnCloseRequest(event -> {
+            for (ChessBoard board: manager.chessBoardManager.chessBoards){
+                try {
+                    manager.request2server(Data.Type.QuitRoom, manager.name, board.roomname);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            System.exit(0);
+        });
     }
 
     public void setClientManager(ClientManager manager) {

@@ -17,8 +17,8 @@ public class ClientManager {
     private Parent lobbyRoot;
     private ClientLogin clientLogin;
     private ClientLobby clientLobby;
-    private ChessBoardManager chessBoardManager;
-    private String name;
+    public ChessBoardManager chessBoardManager;
+    public String name;
 
     ClientManager() throws IOException {
         FXMLLoader loader;
