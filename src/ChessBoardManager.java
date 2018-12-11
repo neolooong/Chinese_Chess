@@ -229,6 +229,7 @@ public class ChessBoardManager {
         stage.setOnCloseRequest(event -> {
             try {
                 clientManager.request2server(Data.Type.QuitRoom, null, roomName);
+                chessBoards.remove(chessBoard);
             } catch (IOException e) {
                 e.printStackTrace();
             }

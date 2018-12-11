@@ -2,40 +2,28 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
 import java.util.Iterator;
 
 public class ServerView {
-    private static int default_port = 16888;
-    private ServerSocket serverSocket;
-    private PlayerManager playerManager = new PlayerManager();
+    private static int LobbyPort = 16888;
+    private static int RoomPort = 12345;
+    private LobbyManager lobbyManager = new LobbyManager();
     private GameManager gameManager = new GameManager();
 
     public VBox playerList, roomList;
 
     public void initialize() throws IOException {
-        gameManager.setPlayerManager(playerManager);
-        playerManager.setGameManager(gameManager);
-        playerManager.setServerView(this);
+        lobbyManager.setGameManager(gameManager);
+        gameManager.setLobbyManager(lobbyManager);
+        lobbyManager.setServerView(this);
 
-        serverSocket = new ServerSocket(default_port);
-        gameManager.connect();
-        new Thread(() -> {
-            while (playerManager.size() < 100) {
-                try {
-                    Socket socket = serverSocket.accept();
-                    playerManager.playerAdd(socket);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
+        lobbyManager.connect(LobbyPort);
+        gameManager.connect(RoomPort);
     }
 
     public void updatePlayerList(){
         playerList.getChildren().clear();
-        Iterator<String> iterator = playerManager.getPlayerMap().keySet().iterator();
+        Iterator<String> iterator = lobbyManager.getPlayerMap().keySet().iterator();
         while (iterator.hasNext()){
             Label label = new Label(iterator.next());
             playerList.getChildren().add(label);

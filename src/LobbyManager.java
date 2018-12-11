@@ -4,18 +4,35 @@ import javafx.application.Platform;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-public class PlayerManager {
+public class LobbyManager {
+    private ServerSocket serverSocket;
     private ServerView serverView;
     private GameManager gameManager;
     private Set<Socket> sockets = new HashSet<>();
     private HashMap<String, Socket> playerMap = new HashMap<>();
 
-    PlayerManager (){
+    LobbyManager(){
+
+    }
+
+    public void connect(int port) throws IOException {
+        serverSocket = new ServerSocket(port);
+        new Thread(() -> {
+            while (playerMap.size() < 100) {
+                try {
+                    Socket socket = serverSocket.accept();
+                    playerAdd(socket);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
 
     }
 
@@ -90,10 +107,6 @@ public class PlayerManager {
             }
 
         }).start();
-    }
-
-    public int size(){
-        return playerMap.size();
     }
 
     private void respond2player(Socket socket, Data.Type type, String message, String roomname) throws IOException {

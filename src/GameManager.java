@@ -8,9 +8,8 @@ import java.net.Socket;
 import java.util.HashMap;
 
 public class GameManager {
-    private static int port = 12345;
     private ServerSocket serverSocket;
-    private PlayerManager playerManager;
+    private LobbyManager lobbyManager;
     private HashMap<String, Socket> playerMap = new HashMap<>();    // 玩家名稱 -> 連線
     private HashMap<String, String[]> roomMap = new HashMap<>();    // 房間名稱 -> 玩家名稱陣列
 
@@ -22,7 +21,7 @@ public class GameManager {
     }
 
 //    連線
-    public void connect() throws IOException{
+    public void connect(int port) throws IOException{
         serverSocket = new ServerSocket(port);
         new Thread(() -> {
             try{
@@ -209,7 +208,7 @@ public class GameManager {
         return roomMap.get(roomname);
     }
 
-    public void setPlayerManager(PlayerManager playerManager) {
-        this.playerManager = playerManager;
+    public void setLobbyManager(LobbyManager lobbyManager) {
+        this.lobbyManager = lobbyManager;
     }
 }
