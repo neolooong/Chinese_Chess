@@ -6,10 +6,15 @@ import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
+import java.util.HashSet;
 
 public class GameManager {
     private ServerSocket serverSocket;
+
     private LobbyManager lobbyManager;
+
+    private HashSet<Player> players = new HashSet<>();
+
     private HashMap<String, Socket> playerMap = new HashMap<>();    // 玩家名稱 -> 連線
     private HashMap<String, String[]> roomMap = new HashMap<>();    // 房間名稱 -> 玩家名稱陣列
 
@@ -210,5 +215,9 @@ public class GameManager {
 
     public void setLobbyManager(LobbyManager lobbyManager) {
         this.lobbyManager = lobbyManager;
+    }
+
+    public void setPlayers(HashSet<Player> players) {
+        this.players = players;
     }
 }

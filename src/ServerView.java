@@ -2,19 +2,26 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.Iterator;
 
 public class ServerView {
     private static int LobbyPort = 16888;
     private static int RoomPort = 12345;
-    private LobbyManager lobbyManager = new LobbyManager();
-    private GameManager gameManager = new GameManager();
+    private LobbyManager lobbyManager = new LobbyManager(); // 大廳管理者
+    private GameManager gameManager = new GameManager();    // 遊戲管理者
+
+    private HashSet<Player> players = new HashSet<>();      // 玩家清單
 
     public VBox playerList, roomList;
 
     public void initialize() throws IOException {
         lobbyManager.setGameManager(gameManager);
         gameManager.setLobbyManager(lobbyManager);
+
+        lobbyManager.setPlayers(players);
+        gameManager.setPlayers(players);
+
         lobbyManager.setServerView(this);
 
         lobbyManager.connect(LobbyPort);

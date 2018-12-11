@@ -12,8 +12,12 @@ import java.util.Set;
 
 public class LobbyManager {
     private ServerSocket serverSocket;
+
     private ServerView serverView;
     private GameManager gameManager;
+
+    private HashSet<Player> players = new HashSet<>();
+
     private Set<Socket> sockets = new HashSet<>();
     private HashMap<String, Socket> playerMap = new HashMap<>();
 
@@ -148,5 +152,9 @@ public class LobbyManager {
 
     public HashMap<String, Socket> getPlayerMap() {
         return playerMap;
+    }
+
+    public void setPlayers(HashSet<Player> players) {
+        this.players = players;
     }
 }
