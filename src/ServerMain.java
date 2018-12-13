@@ -15,6 +15,7 @@ public class ServerMain extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
+        System.out.println("ㄏ");
         FXMLLoader loader = new FXMLLoader(getClass().getResource("ServerView.fxml"));
         Parent root = loader.load();
 
