@@ -134,11 +134,11 @@ public class LobbyManager {
                 outputStream.writeObject(data);
                 outputStream.flush();
                 break;
-//            case RefreshRoomList:
-//                data.rooms = gameManager.getRoomMap();
-//                outputStream.writeObject(data);
-//                outputStream.flush();
-//                break;
+            case RefreshRoomList:
+                data.rooms = gameManager.getRoomMap();
+                outputStream.writeObject(data);
+                outputStream.flush();
+                break;
         }
     }
 
