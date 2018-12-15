@@ -1,7 +1,6 @@
 package Datas;
 
 import java.io.Serializable;
-import java.util.HashMap;
 
 public class Data implements Serializable{
     public enum Type{
@@ -11,17 +10,16 @@ public class Data implements Serializable{
     public Type type;
 
     public String playerName;
-    public String connectRespond;
-
+    public String serverRespond;
     public String roomName;
-    public String createRoomRespond;
-
-    public HashMap<String, String[]> rooms;
-
-    public String enterRoomRespond;
 
     public Data(Type type){
         this.type = type;
     }
 
+    public Data(Type type, String serverRespond, String roomName) {
+        this.type = type;
+        this.serverRespond = serverRespond;
+        this.roomName = roomName;
+    }
 }

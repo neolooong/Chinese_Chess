@@ -1,11 +1,6 @@
 import Datas.Data;
-import Datas.GameData;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
-import javafx.stage.WindowEvent;
-
-import java.beans.EventHandler;
 import java.io.IOException;
 
 public class ClientLogin {
@@ -22,16 +17,16 @@ public class ClientLogin {
 
     public void goLobbyButton() throws IOException, ClassNotFoundException, InterruptedException {
 //        連線    開啟接收通道
-        manager.connect(ipTextField.getText(), 16888);
+        manager.lobbyConnect(ipTextField.getText(), 16888);
 //        發送請求
-        manager.request2server(Data.Type.Connect, userNameTextField.getText(), null);
+        manager.lobbyRequest(Data.Type.Connect, userNameTextField.getText(), null);
 
         manager.setName(userNameTextField.getText());
 
         manager.getStage().setOnCloseRequest(event -> {
-            for (ChessBoard board: manager.chessBoardManager.chessBoards){
+            for (ChessBoard board: manager.chessBoards){
                 try {
-                    manager.request2server(Data.Type.QuitRoom, manager.name, board.roomname);
+                    manager.lobbyRequest(Data.Type.QuitRoom, manager.name, board.roomname);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

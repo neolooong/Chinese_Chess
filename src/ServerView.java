@@ -1,50 +1,104 @@
+import Datas.GameData;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Iterator;
+import java.io.ObjectInputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.ArrayList;
 
 public class ServerView {
-    private static int LobbyPort = 16888;
-    private static int RoomPort = 12345;
-    private LobbyManager lobbyManager = new LobbyManager(); // 大廳管理者
-    private GameManager gameManager = new GameManager();    // 遊戲管理者
+    private ServerSocket lobbyServerSocket;
+    private ServerSocket roomServerSocket;
+    private int LobbyPort = 16888;
+    private int RoomPort = 12345;
 
-    private HashSet<Player> players = new HashSet<>();      // 玩家清單
+    public static ArrayList<Player> players = new ArrayList<>();      // 玩家清單
+    public static ArrayList<GameRoom> rooms = new ArrayList<>();      // 房間清單
 
     public VBox playerList, roomList;
 
     public void initialize() throws IOException {
-        lobbyManager.setGameManager(gameManager);
-        gameManager.setLobbyManager(lobbyManager);
 
-        lobbyManager.setPlayers(players);
-        gameManager.setPlayers(players);
+        lobbyConnect();
+        roomConnect();
+    }
 
-        lobbyManager.setServerView(this);
+    public void lobbyConnect() throws IOException {
+        lobbyServerSocket = new ServerSocket(LobbyPort);
+        new Thread(() -> {
+            while (true) {
+                try {
+                    System.out.println("wait new player");
+                    new Player(lobbyServerSocket.accept(), this);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
 
-        lobbyManager.connect(LobbyPort);
-        gameManager.connect(RoomPort);
+    public void roomConnect() throws IOException{
+        roomServerSocket = new ServerSocket(RoomPort);
+        new Thread(() -> {
+            while (true){
+                try {
+                    System.out.println("Waiting");
+                    Socket socket = roomServerSocket.accept();
+                    new Thread(() -> {
+                        try {
+                            ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream());
+                            GameData data = (GameData) inputStream.readObject();
+                            System.out.println("room: get a " + data.behavior+ " data.");
+                            Player player = getPlayer(data.source);
+                            if (player != null){
+                                player.roomSocket = socket;
+                                player.roomRequest();
+                            }
+                        } catch (IOException | ClassNotFoundException e) {
+                            e.printStackTrace();
+                        }
+                    }).start();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+
     }
 
     public void updatePlayerList(){
         playerList.getChildren().clear();
-        Iterator<String> iterator = lobbyManager.getPlayerMap().keySet().iterator();
-        while (iterator.hasNext()){
-            Label label = new Label(iterator.next());
+        for (Player player:players){
+            Label label = new Label(player.name);
             playerList.getChildren().add(label);
         }
     }
 
     public void updateRoomList(){
         roomList.getChildren().clear();
-        Iterator<String> iterator = gameManager.getRoomMap().keySet().iterator();
-        while (iterator.hasNext()){
-            String buffer = iterator.next();
-            String players[] = gameManager.getRoomPlayers(buffer);
-            Label label = new Label("房名: " + buffer + "   房主: " + players[0] + "  房間人數: " + (players[1] == null ? "1":"2"));
+        for (GameRoom room:rooms){
+            Label label = new Label("Room: " + room.roomName + "    Host: " + room.host.name + "    NumberOfPlayer: " + room.howManyPlayerInTheRoom());
             roomList.getChildren().add(label);
         }
+    }
+
+    public static Player getPlayer(String name){
+        for (Player player: players){
+            if (player.name.equals(name)){
+                return player;
+            }
+        }
+        return null;
+    }
+
+    public static GameRoom getRoom(String name){
+        for (GameRoom room: rooms){
+            if (room.roomName.equals(name)){
+                return room;
+            }
+        }
+        return null;
     }
 }

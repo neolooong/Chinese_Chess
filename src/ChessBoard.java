@@ -15,7 +15,7 @@ public class ChessBoard {
     public boolean isStart = false;
     public boolean isUTurn = false;
 
-    private ChessBoardManager manager;
+    private ClientManager manager;
     public Label roomNameLabel, serverMessage, player1Name, player2Name;
     public Button readyBtn, requestPreviousMoveBtn, surrenderBtn;
     public Pane pane;
@@ -319,14 +319,14 @@ public class ChessBoard {
             history.addLast(record);
             if (isWin()){
                 System.out.println("Congratulation!! You win the game.");
-                manager.request2server(roomname, GameData.Behavior.GameEnd, null, null);
+                manager.roomRequest(roomname, GameData.Behavior.GameEnd, null, null);
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setHeaderText("");
                 alert.setContentText("Congratulation!! You win the game.");
                 alert.showAndWait();
                 resetGame();
             }else {
-                manager.request2server(roomname, GameData.Behavior.Move, new int[]{targetChess.getX(), targetChess.getY()}, new int[]{destination.getX(), destination.getY()});
+                manager.roomRequest(roomname, GameData.Behavior.Move, new int[]{targetChess.getX(), targetChess.getY()}, new int[]{destination.getX(), destination.getY()});
                 System.out.println(destination.getType() + " move to " + destination.getX() + "," + destination.getY() + ".");
             }
         }else {
@@ -363,7 +363,7 @@ public class ChessBoard {
 
     public void readyBtn(ActionEvent event){
         readyBtn.setDisable(true);
-        manager.request2server(roomname, GameData.Behavior.Ready, null, null);
+        manager.roomRequest(roomname, GameData.Behavior.Ready, null, null);
     }
 
     public void openNewGame() {
@@ -468,7 +468,7 @@ public class ChessBoard {
         history = new LinkedList<>();
     }
 
-    public void setManager(ChessBoardManager manager) {
+    public void setManager(ClientManager manager) {
         this.manager = manager;
     }
 
@@ -482,11 +482,11 @@ public class ChessBoard {
     }
 
     public void requestUnMoveBtn(ActionEvent event) {
-        manager.request2server(roomname, GameData.Behavior.RequestUnMove, null, null);
+        manager.roomRequest(roomname, GameData.Behavior.RequestUnMove, null, null);
     }
 
     public void surrenderBtn(ActionEvent event) {
-        manager.request2server(roomname, GameData.Behavior.Surrender, null, null);
+        manager.roomRequest(roomname, GameData.Behavior.Surrender, null, null);
         resetGame();
     }
 }

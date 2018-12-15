@@ -1,24 +1,37 @@
 import Datas.Data;
+import Datas.GameData;
+import Datas.GameData.Behavior;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Optional;
+
+/**
+ * 管理視窗
+ * 玩家名稱
+ * 大廳連線 、 房間連線
+ * */
 
 public class ClientManager {
-    private String server;
-    private Socket socket;
-    private Stage stage;
-    private Parent loginRoot;
-    private Parent lobbyRoot;
-    private ClientLogin clientLogin;
-    private ClientLobby clientLobby;
-    public ChessBoardManager chessBoardManager;
-    public String name;
+    private Stage stage;                        // 主視窗
+    private String server;                      // 伺服器IP
+    public String name;                         // 玩家名稱
+    private Socket lobbySocket;                 // 大廳連線
+    private Socket roomSocket;                  // 房間連線
+    private Parent loginRoot;                   // 登入版面
+    private Parent lobbyRoot;                   // 大廳版面
+    private ClientLogin clientLogin;            // 登入的 Controller
+    private ClientLobby clientLobby;            // 大廳的 Controller
+    public ArrayList<ChessBoard> chessBoards = new ArrayList<>(); // 目前所在房間
 
     ClientManager() throws IOException {
         FXMLLoader loader;
@@ -33,27 +46,30 @@ public class ClientManager {
         lobbyRoot = loader.load();
         clientLobby = loader.getController();
         clientLobby.setClientManager(this);
-
-        chessBoardManager = new ChessBoardManager();
-        chessBoardManager.setClientManager(this);
     }
 
-    public void connect(String server, int port) throws IOException {
+    public void lobbyConnect(String server, int port) throws IOException {
         this.server = server;
-        socket = new Socket(server, port);
-        openInputStream();
+        lobbySocket = new Socket(server, port);
+        lobbyRespond();
     }
 
-    public void openInputStream(){
+    public void roomConnect(String server) throws IOException {
+        roomSocket = new Socket(server, 12345);
+        roomRespond();
+        roomRequest(null, Behavior.Register);
+    }
+
+    public void lobbyRespond(){
         new Thread(() -> {
             try{
                 keepListen:while (true) {
-                    ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream());
+                    ObjectInputStream inputStream = new ObjectInputStream(lobbySocket.getInputStream());
                     Data data = (Data) inputStream.readObject();
                     switch (data.type) {
                         case ConnectStatus:
-                            if (data.connectRespond.equals("OK")) {
-                                chessBoardManager.connect(server);
+                            if (data.serverRespond.equals("OK")) {
+                                roomConnect(server);
                                 Platform.runLater(() -> {
                                     clientLobby.setPlayerName(name);
                                     stage.setScene(new Scene(lobbyRoot));
@@ -64,18 +80,18 @@ public class ClientManager {
                                     Alert alert = new Alert(Alert.AlertType.ERROR);
                                     alert.setTitle("How");
                                     alert.setHeaderText("");
-                                    alert.setContentText(data.connectRespond);
+                                    alert.setContentText(data.serverRespond);
                                     alert.showAndWait();
                                 });
-                                socket.close();
+                                lobbySocket.close();
                                 break keepListen;
                             }
                             break;
                         case CreateRoomStatus:
-                            if (data.createRoomRespond.equals("OK")) {
+                            if (data.serverRespond.equals("OK")) {
                                 Platform.runLater(() -> {
                                     try {
-                                        chessBoardManager.openChessBoard(data.roomName, 1);
+                                        openChessBoard(data.roomName, 1);
                                     } catch (IOException e) {
                                         e.printStackTrace();
                                     }
@@ -85,16 +101,16 @@ public class ClientManager {
                                     Alert alert = new Alert(Alert.AlertType.ERROR);
                                     alert.setTitle("Afu");
                                     alert.setHeaderText("");
-                                    alert.setContentText(data.createRoomRespond);
+                                    alert.setContentText(data.serverRespond);
                                     alert.showAndWait();
                                 });
                             }
                             break;
                         case EnterRoomStatus:
-                            if (data.enterRoomRespond.equals("OK")) {
+                            if (data.serverRespond.equals("OK")) {
                                 Platform.runLater(() -> {
                                     try {
-                                        chessBoardManager.openChessBoard(data.roomName, 2);
+                                        openChessBoard(data.roomName, 2);
                                     } catch (IOException e) {
                                         e.printStackTrace();
                                     }
@@ -104,24 +120,26 @@ public class ClientManager {
                                     Alert alert = new Alert(Alert.AlertType.ERROR);
                                     alert.setTitle("叛徒");
                                     alert.setHeaderText("");
-                                    alert.setContentText(data.enterRoomRespond);
+                                    alert.setContentText(data.serverRespond);
                                     alert.showAndWait();
                                 });
                             }
                             break;
                         case RefreshRoomList:
-                            Platform.runLater(() -> clientLobby.updateRoomList(data.rooms));
+                            Platform.runLater(() -> clientLobby.updateRoomList(data.serverRespond));
                             break;
                     }
                 }
             }catch (IOException | ClassNotFoundException e){
+                System.err.println(e);
                 e.printStackTrace();
             }
         }).start();
     }
 
-    public void request2server(Data.Type type, String playername, String roomname) throws IOException {
-        ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
+    public void lobbyRequest(Data.Type type, String playername, String roomname) throws IOException {
+        System.out.println("send a " + type + " data to server");
+        ObjectOutputStream outputStream = new ObjectOutputStream(lobbySocket.getOutputStream());
         Data data = new Data(type);
         switch (type){
             case Connect:
@@ -148,6 +166,140 @@ public class ClientManager {
 
     }
 
+    public void roomRespond() {
+        new Thread(() -> {
+            try {
+                while (true) {
+                    ObjectInputStream inputStream = new ObjectInputStream(roomSocket.getInputStream());
+                    GameData data = (GameData) inputStream.readObject();
+                    ChessBoard board = getChessBoard(data.roomName);
+                    System.out.println("Get " + data.behavior + " data");
+                    switch (data.behavior) {
+                        case ServerMessage:
+                            board.serverMessage.setText(data.message);
+                            break;
+                        case CheckIn:
+                            Platform.runLater(() -> {
+                                board.player1Name.setText(data.players[0]);
+                                board.player2Name.setText(data.players[1]);
+                            });
+                            break;
+                        case CheckOut:
+                            board.order = 1;
+                            Platform.runLater(() -> {
+                                board.resetGame();
+                                board.player1Name.setText(data.players[0]);
+                                board.player2Name.setText(data.players[1]);
+                            });
+                            break;
+                        case GameStart:
+                            Platform.runLater(() -> {
+                                board.openNewGame();
+                            });
+                            break;
+                        case Move:
+                            Platform.runLater(() -> {
+                                board.move(data.from, data.to);
+                            });
+                            break;
+                        case RequestUnMove:
+                            Platform.runLater(() -> {
+                                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                                alert.setHeaderText("");
+                                alert.setContentText("Your opponent request to unMove..");
+                                Optional<ButtonType> optional = alert.showAndWait();
+                                if (optional.isPresent() && optional.get().equals(ButtonType.OK)) {
+//                                    todo send permit
+                                    roomRequest(board.roomname, GameData.Behavior.PermitUnMove, null, null);
+                                    board.unMove();
+                                } else {
+//                                    todo send reject
+                                    roomRequest(board.roomname, GameData.Behavior.RejectUnMove, null, null);
+                                }
+                            });
+                            break;
+                        case PermitUnMove:
+                            Platform.runLater(() -> {
+                                board.unMove();
+                            });
+                            break;
+                        case RejectUnMove:
+                            Platform.runLater(() -> {
+                                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                                alert.setHeaderText("");
+                                alert.setContentText("Your opponent reject to you..");
+                                alert.showAndWait();
+                            });
+                            break;
+                        case GameEnd:
+                            Platform.runLater(() -> {
+                                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                                alert.setHeaderText("");
+                                alert.setContentText("Keep it up!! Next game will be better.");
+                                alert.showAndWait();
+                                board.resetGame();
+                            });
+                            break;
+                        case Surrender:
+                            Platform.runLater(() -> {
+                                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                                alert.setHeaderText("");
+                                alert.setContentText("Your opponent surrendered to you.");
+                                alert.showAndWait();
+                                board.resetGame();
+                            });
+                            break;
+                    }
+                }
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        }).start();
+    }
+
+    public void roomRequest(String roomName, Behavior behavior, int from[], int to[]) {
+        try {
+            ObjectOutputStream outputStream = new ObjectOutputStream(roomSocket.getOutputStream());
+            GameData data = new GameData(roomName, name, behavior);
+            data.from = from;
+            data.to = to;
+            outputStream.writeObject(data);
+            outputStream.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void roomRequest(String roomName, Behavior behavior) {
+        roomRequest(roomName, behavior, null, null);
+    }
+
+    public void openChessBoard(String roomName, int order) throws IOException{
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("ChessBoard.fxml"));
+        Parent root = loader.load();
+
+        ChessBoard chessBoard = loader.getController();
+        chessBoard.setManager(this);
+        chessBoard.setRoomname(roomName);
+        chessBoard.setOrder(order);
+        chessBoards.add(chessBoard);
+
+        Stage stage = new Stage();
+        stage.setTitle("象棋靈王八蛋營養大象棋");
+        stage.getIcons().add(new Image("img/icon.png"));
+        stage.setScene(new Scene(root));
+        stage.setOnCloseRequest(event -> {
+            try {
+                lobbyRequest(Data.Type.QuitRoom, null, roomName);
+                chessBoards.remove(chessBoard);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        stage.show();
+        roomRequest(roomName, GameData.Behavior.CheckIn);
+    }
+
     public Stage getStage() {
         return stage;
     }
@@ -166,6 +318,14 @@ public class ClientManager {
 
     public void setName(String name) {
         this.name = name;
-        chessBoardManager.setName(name);
+    }
+
+    public ChessBoard getChessBoard(String roomName){
+        for (ChessBoard board: chessBoards){
+            if (board.roomname.equals(roomName)){
+                return board;
+            }
+        }
+        return null;
     }
 }

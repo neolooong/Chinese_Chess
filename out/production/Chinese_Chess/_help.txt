@@ -1,0 +1,22 @@
+Data:
+1. Data.java            -> lobby 傳接資料的類別
+2. GameRoom.java        -> room 傳接資料的類別
+
+Server:
+1. ServerMain.java      -> 開伺服器
+2. ServerView.java      -> ServerMain 的 Controller
+                        -> 管理 ServerSocket、玩家清單 和 房間清單
+3. Player.java          -> 管理連上伺服器玩家的 姓名 和 Socket
+4. GameRoom.java        -> 管理房間的名稱、在此房間的玩家 和 準備狀態 等等
+
+Client:
+1. ClientMain.java      -> 開啟遊戲
+2. ClientManager.java   -> 管理 Stage、Socket、版面、名稱 和 在那些房間
+3. ClientLogin.java     -> 登入畫面的 Controller
+4. ClientLobby.java     -> 大廳畫面的 Controller
+5. ChessBoard.java      -> 紀錄遊戲的大小事 房名、先後手、誰的回合、棋盤 等等
+
+Other:
+1. Chess.java           -> 棋子種類
+2. ChessBoardRecord.java-> 記錄每一手的類別
+3. ChessGround.java     -> 棋盤上的每一個點

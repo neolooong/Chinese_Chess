@@ -9,7 +9,6 @@ public class ClientMain extends Application {
     public void start(Stage primaryStage) throws Exception{
 
         ClientManager manager = new ClientManager();
-
         manager.setStage(primaryStage);
 
         primaryStage.setScene(new Scene(manager.getLoginRoot()));
