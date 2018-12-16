@@ -23,22 +23,19 @@ public class GameRoom {
         return 3;           // Full
     }
 
-    public synchronized int quitRoom(Player player){
+    public synchronized void quitRoom(Player player){
         resetRoom();
-        if (host == player && guest == null)
-            return 0;       // Remove the room
-        if (host == player /*&& guest != null*/){
+        if (host == player && guest == null) {
+            ServerView.rooms.remove(this);
+        }else if (host == player){
             host = guest;
             guest = null;
             host.roomRespond(roomName, "Server", Behavior.CheckOut);     // todo 'tell host that guest leave'
-            return 1;       // Still one player in the room
         }else if (player == guest){
             guest = null;
             host.roomRespond(roomName, "Server", Behavior.CheckOut);     // todo 'tell host that guest leave'
-            return 1;       // Still one player in the room
         }else {
             System.out.println("Some error that not sure how to happen");
-            return -1;      // Some error that not sure how to happen
         }
     }
 

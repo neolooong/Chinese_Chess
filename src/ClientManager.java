@@ -26,7 +26,11 @@ public class ClientManager {
     private String server;                      // 伺服器IP
     public String name;                         // 玩家名稱
     private Socket lobbySocket;                 // 大廳連線
+    public ObjectInputStream lobbyInput;
+    public ObjectOutputStream lobbyOutput;
     private Socket roomSocket;                  // 房間連線
+    public ObjectInputStream roomInput;
+    public ObjectOutputStream roomOutput;
     private Parent loginRoot;                   // 登入版面
     private Parent lobbyRoot;                   // 大廳版面
     private ClientLogin clientLogin;            // 登入的 Controller
@@ -51,21 +55,25 @@ public class ClientManager {
     public void lobbyConnect(String server, int port) throws IOException {
         this.server = server;
         lobbySocket = new Socket(server, port);
+        lobbyOutput = new ObjectOutputStream(lobbySocket.getOutputStream());
+        lobbyInput = new ObjectInputStream(lobbySocket.getInputStream());
         lobbyRespond();
     }
 
     public void roomConnect(String server) throws IOException {
         roomSocket = new Socket(server, 12345);
-        roomRespond();
+        roomOutput = new ObjectOutputStream(roomSocket.getOutputStream());
         roomRequest(null, Behavior.Register);
+        roomInput = new ObjectInputStream(roomSocket.getInputStream());
+        roomRespond();
     }
 
     public void lobbyRespond(){
         new Thread(() -> {
             try{
                 keepListen:while (true) {
-                    ObjectInputStream inputStream = new ObjectInputStream(lobbySocket.getInputStream());
-                    Data data = (Data) inputStream.readObject();
+                    Data data = (Data) lobbyInput.readObject();
+                    System.out.println("get a " + data.type + " data.");
                     switch (data.type) {
                         case ConnectStatus:
                             if (data.serverRespond.equals("OK")) {
@@ -84,6 +92,8 @@ public class ClientManager {
                                     alert.showAndWait();
                                 });
                                 lobbySocket.close();
+                                lobbyInput.close();
+                                lobbyOutput.close();
                                 break keepListen;
                             }
                             break;
@@ -131,36 +141,34 @@ public class ClientManager {
                     }
                 }
             }catch (IOException | ClassNotFoundException e){
-                System.err.println(e);
-                e.printStackTrace();
+                System.err.println("Catch: " + e);
             }
         }).start();
     }
 
     public void lobbyRequest(Data.Type type, String playername, String roomname) throws IOException {
         System.out.println("send a " + type + " data to server");
-        ObjectOutputStream outputStream = new ObjectOutputStream(lobbySocket.getOutputStream());
         Data data = new Data(type);
         switch (type){
             case Connect:
                 data.playerName = playername;
-                outputStream.writeObject(data);
-                outputStream.flush();
+                lobbyOutput.writeObject(data);
+                lobbyOutput.flush();
                 break;
             case CreateRoom:
                 data.roomName = roomname;
-                outputStream.writeObject(data);
-                outputStream.flush();
+                lobbyOutput.writeObject(data);
+                lobbyOutput.flush();
                 break;
             case EnterRoom:
                 data.roomName = roomname;
-                outputStream.writeObject(data);
-                outputStream.flush();
+                lobbyOutput.writeObject(data);
+                lobbyOutput.flush();
                 break;
             case QuitRoom:
                 data.roomName = roomname;
-                outputStream.writeObject(data);
-                outputStream.flush();
+                lobbyOutput.writeObject(data);
+                lobbyOutput.flush();
                 break;
         }
 
@@ -170,8 +178,7 @@ public class ClientManager {
         new Thread(() -> {
             try {
                 while (true) {
-                    ObjectInputStream inputStream = new ObjectInputStream(roomSocket.getInputStream());
-                    GameData data = (GameData) inputStream.readObject();
+                    GameData data = (GameData) roomInput.readObject();
                     ChessBoard board = getChessBoard(data.roomName);
                     System.out.println("Get " + data.behavior + " data");
                     switch (data.behavior) {
@@ -209,11 +216,9 @@ public class ClientManager {
                                 alert.setContentText("Your opponent request to unMove..");
                                 Optional<ButtonType> optional = alert.showAndWait();
                                 if (optional.isPresent() && optional.get().equals(ButtonType.OK)) {
-//                                    todo send permit
                                     roomRequest(board.roomname, GameData.Behavior.PermitUnMove, null, null);
                                     board.unMove();
                                 } else {
-//                                    todo send reject
                                     roomRequest(board.roomname, GameData.Behavior.RejectUnMove, null, null);
                                 }
                             });
@@ -252,19 +257,18 @@ public class ClientManager {
                     }
                 }
             } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
+                System.err.println("Catch: " + e);
             }
         }).start();
     }
 
     public void roomRequest(String roomName, Behavior behavior, int from[], int to[]) {
         try {
-            ObjectOutputStream outputStream = new ObjectOutputStream(roomSocket.getOutputStream());
             GameData data = new GameData(roomName, name, behavior);
             data.from = from;
             data.to = to;
-            outputStream.writeObject(data);
-            outputStream.flush();
+            roomOutput.writeObject(data);
+            roomOutput.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -272,6 +276,25 @@ public class ClientManager {
 
     private void roomRequest(String roomName, Behavior behavior) {
         roomRequest(roomName, behavior, null, null);
+    }
+
+    public void quitGame(){
+        try {
+            if (lobbySocket != null)
+                lobbySocket.close();
+            if (lobbyInput != null)
+                lobbyInput.close();
+            if (lobbyOutput != null)
+                lobbyOutput.close();
+            if (roomSocket != null)
+                roomSocket.close();
+            if (roomInput != null)
+                roomInput.close();
+            if (roomOutput != null)
+                roomOutput.close();
+        } catch (IOException e) {
+            System.err.println("Catch: " + e);
+        }
     }
 
     public void openChessBoard(String roomName, int order) throws IOException{

@@ -24,13 +24,7 @@ public class ClientLogin {
         manager.setName(userNameTextField.getText());
 
         manager.getStage().setOnCloseRequest(event -> {
-            for (ChessBoard board: manager.chessBoards){
-                try {
-                    manager.lobbyRequest(Data.Type.QuitRoom, manager.name, board.roomname);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+            manager.quitGame();
             System.exit(0);
         });
     }

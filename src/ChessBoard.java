@@ -12,7 +12,6 @@ import java.util.LinkedList;
 public class ChessBoard {
     public String roomname;
     public int order;           //1先手  2後手
-    public boolean isStart = false;
     public boolean isUTurn = false;
 
     private ClientManager manager;
@@ -53,6 +52,21 @@ public class ChessBoard {
                                 } else if (targetChess.getY() - 1 > 6 && targetChess.getY() - 1 == eventChess.getY() && targetChess.getX() == eventChess.getX()) {
                                     move(true, eventChess);
                                 } else {
+                                    if (targetChess.getX() == eventChess.getX() && eventChess.getType() == Chess.King){
+                                        boolean king2king = true;
+                                        for (int i = targetChess.getY() - 1; i > eventChess.getY(); i--){
+                                            System.out.println(i);
+                                            if (grounds[targetChess.getX()][i].getType() != Chess.None){
+                                                System.out.println(87);
+                                                king2king = false;
+                                                break;
+                                            }
+                                        }
+                                        if (king2king){
+                                            move(true, eventChess);
+                                            break;
+                                        }
+                                    }
                                     move(false, eventChess);
                                 }
                                 break;
@@ -313,6 +327,7 @@ public class ChessBoard {
     public void move(boolean isMove, ChessGround destination){
         if (isMove){
             isUTurn = false;
+            requestPreviousMoveBtn.setDisable(false);
             ChessBoardRecord record = new ChessBoardRecord(new int[]{targetChess.getX(), targetChess.getY()}, new int[]{destination.getX(), destination.getY()}, destination.getGroup(), destination.getType());
             destination.setUpChess(targetChess.getGroup(), targetChess.getType());
             targetChess.setUpChess("", Chess.None);
@@ -338,6 +353,7 @@ public class ChessBoard {
 
     public void move(int from[], int to[]){
         isUTurn = true;
+        requestPreviousMoveBtn.setDisable(true);
         from = rotate(from);
         to = rotate(to);
         ChessBoardRecord record = new ChessBoardRecord(from, to, grounds[to[0]][to[1]].getGroup(), grounds[to[0]][to[1]].getType());
@@ -350,6 +366,11 @@ public class ChessBoard {
     public void unMove(){
         isUTurn = !isUTurn;
         ChessBoardRecord record = history.removeLast();
+        if (history.size() == 0){
+            requestPreviousMoveBtn.setDisable(true);
+        }else {
+            requestPreviousMoveBtn.setDisable(!requestPreviousMoveBtn.isDisable());
+        }
         int from[] = record.getFrom();
         int to[] = record.getTo();
         grounds[from[0]][from[1]].setUpChess(grounds[to[0]][to[1]].getGroup(), grounds[to[0]][to[1]].getType());
@@ -367,9 +388,7 @@ public class ChessBoard {
     }
 
     public void openNewGame() {
-        System.out.println("Game Start!!");
-        isStart = true;
-        requestPreviousMoveBtn.setDisable(false);
+        System.out.println(roomname + ": Game Start!!");
         surrenderBtn.setDisable(false);
         if (order == 1){
             isUTurn = true;
@@ -455,7 +474,6 @@ public class ChessBoard {
 
     public void resetGame(){
         targetChess = new ChessGround();
-        isStart = false;
         isUTurn = false;
         readyBtn.setDisable(false);
         requestPreviousMoveBtn.setDisable(true);

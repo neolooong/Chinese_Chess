@@ -7,18 +7,29 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
 
 import static Datas.Data.*;
 
 public class Player {
     public String name;
     public Socket lobbySocket;
+    public ObjectInputStream lobbyInput;
+    public ObjectOutputStream lobbyOutput;
     public Socket roomSocket;
+    public ObjectInputStream roomInput;
+    public ObjectOutputStream roomOutput;
+
+    public ArrayList<GameRoom> myRooms = new ArrayList<>();
+
+    public boolean isClose = false;
 
     public ServerView serverView;
 
-    public Player(Socket lobbySocket, ServerView serverView) {
+    public Player(Socket lobbySocket, ServerView serverView) throws IOException {
         this.lobbySocket = lobbySocket;
+        this.lobbyInput = new ObjectInputStream(lobbySocket.getInputStream());
+        this.lobbyOutput = new ObjectOutputStream(lobbySocket.getOutputStream());
         this.serverView = serverView;
         new Thread(() -> {
             lobbyRequest();
@@ -28,9 +39,8 @@ public class Player {
     public void lobbyRequest() {
         try{
             while (true){
-                ObjectInputStream inputStream = new ObjectInputStream(lobbySocket.getInputStream());
-                Data data = (Data) inputStream.readObject();
-                System.out.println("lobby: get a " + data.type + " data.");
+                Data data = (Data) lobbyInput.readObject();
+                System.out.println("Lobby: get a " + data.type + " data from " + name + ".");
                 GameRoom room;
                 switch (data.type){
                     case Connect:   // Get connect data
@@ -46,19 +56,19 @@ public class Player {
                             cancelConnect();
                             lobbyRespond(Type.ConnectStatus, "The name had been used.");
                         }
-                        System.out.println("Done");
                         break;
                     case CreateRoom:
                         if (ServerView.getRoom(data.roomName) == null){       // Create GameRoom
                             room = new GameRoom(data.roomName, this);
                             ServerView.rooms.add(room);
+                            myRooms.add(room);
                             lobbyRespond(Type.CreateRoomStatus, "OK", data.roomName);
-                            for (Player player: ServerView.players){
-                                player.lobbyRespond(Type.RefreshRoomList, null);
-                            }
                             Platform.runLater(() -> {
                                 serverView.updateRoomList();
                             });
+                            for (Player player: ServerView.players){
+                                player.lobbyRespond(Type.RefreshRoomList, null);
+                            }
                         }else {     // The room had existed
                             lobbyRespond(Type.CreateRoomStatus, "The room had existed.");
                         }
@@ -68,13 +78,14 @@ public class Player {
                         if (room != null){
                             int enterResult = room.enterRoom(this);
                             if (enterResult == 1){
+                                myRooms.add(room);
                                 lobbyRespond(Type.EnterRoomStatus, "OK", data.roomName);
-                                for (Player player: ServerView.players){
-                                    player.lobbyRespond(Type.RefreshRoomList, null);
-                                }
                                 Platform.runLater(() -> {
                                     serverView.updateRoomList();
                                 });
+                                for (Player player: ServerView.players){
+                                    player.lobbyRespond(Type.RefreshRoomList, null);
+                                }
                             }else if (enterResult == 2){
                                 lobbyRespond(Type.CreateRoomStatus, "Do not play with self.");
                             }else if (enterResult == 3){
@@ -87,29 +98,21 @@ public class Player {
                     case QuitRoom:
                         room = ServerView.getRoom(data.roomName);
                         if (room != null){
-                            int quitResult = room.quitRoom(this);
-                            if (quitResult == 0){
-                                ServerView.rooms.remove(room);
-                            }else if (quitResult == -1){
-                                System.out.println("!!!!!!!");
-                            }
-                            for (Player player: ServerView.players){
-                                player.lobbyRespond(Type.RefreshRoomList, null);
-                            }
+                            room.quitRoom(this);
+                            myRooms.remove(room);
                             Platform.runLater(() -> {
                                 serverView.updateRoomList();
                             });
+                            for (Player player: ServerView.players){
+                                player.lobbyRespond(Type.RefreshRoomList, null);
+                            }
                         }
                         break;
                 }
             }
         }catch (IOException e){
-//            e.printStackTrace();
-            cancelConnect();
-            ServerView.players.remove(this);
-            Platform.runLater(() -> {
-                serverView.updatePlayerList();
-            });
+            System.err.println("Catch: " + e);
+            quitGame();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -117,7 +120,6 @@ public class Player {
 
     public void lobbyRespond(Type type, String serverRespond, String roomName){
         try {
-            ObjectOutputStream outputStream = new ObjectOutputStream(lobbySocket.getOutputStream());
             Data data = new Data(type, serverRespond, roomName);
             if (type == Type.RefreshRoomList){
                 String buffer = "";
@@ -126,10 +128,12 @@ public class Player {
                 }
                 data.serverRespond = buffer;
             }
-            outputStream.writeObject(data);
-            outputStream.flush();
+            lobbyOutput.writeObject(data);
+            lobbyOutput.flush();
+            System.out.println("Lobby: send a " + type + " data to " + name + ".");
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println("Catch: " + e);
+            quitGame();
         }
     }
 
@@ -140,9 +144,8 @@ public class Player {
     public void roomRequest(){
         try {
             while (true){
-                ObjectInputStream inputStream = new ObjectInputStream(roomSocket.getInputStream());
-                GameData data = (GameData) inputStream.readObject();
-                System.out.println("room: get a " + data.behavior + " data.");
+                GameData data = (GameData) roomInput.readObject();
+                System.out.println("Room : get a " + data.behavior + " data from " + data.source + ".");
                 Player opponent = ServerView.getRoom(data.roomName).getOpponent(this);
                 switch (data.behavior){
                     case CheckIn:
@@ -164,7 +167,8 @@ public class Player {
                 }
             }
         } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
+            System.err.println("Catch: " + e);
+            quitGame();
         }
     }
 
@@ -172,12 +176,13 @@ public class Player {
         try {
             GameRoom room = ServerView.getRoom(data.roomName);
             if (room != null){
-                ObjectOutputStream outputStream = new ObjectOutputStream(roomSocket.getOutputStream());
-                outputStream.writeObject(data);
-                outputStream.flush();
+                roomOutput.writeObject(data);
+                roomOutput.flush();
+                System.out.println("Room : send a " + data.behavior + " data to " + name);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println("Catch: " + e);
+            quitGame();
         }
     }
 
@@ -199,11 +204,38 @@ public class Player {
 
     public void cancelConnect() {
         try {
-            lobbySocket.close();
+            if (lobbySocket != null)
+                lobbySocket.close();
+            if (lobbyInput != null)
+                lobbyInput.close();
+            if (lobbyOutput != null)
+                lobbyOutput.close();
             if (roomSocket != null)
                 roomSocket.close();
+            if (roomInput != null)
+                roomInput.close();
+            if (roomOutput != null)
+                roomOutput.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println("Catch: " + e);
+        }
+    }
+
+    public synchronized void quitGame(){
+        if (!isClose){
+            isClose = true;
+            cancelConnect();
+            ServerView.players.remove(this);    // 將自己從玩家名單中剔除
+            for (GameRoom room: myRooms){       // 離開所有房間
+                room.quitRoom(this);
+            }
+            Platform.runLater(() -> {           // 更新視窗
+                serverView.updateRoomList();
+                serverView.updatePlayerList();
+            });
+            for (Player player: ServerView.players){    // 更新所有玩家房間資料
+                player.lobbyRespond(Type.RefreshRoomList, null);
+            }
         }
     }
 }

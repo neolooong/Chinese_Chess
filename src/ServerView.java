@@ -4,6 +4,7 @@ import javafx.scene.layout.VBox;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -20,7 +21,6 @@ public class ServerView {
     public VBox playerList, roomList;
 
     public void initialize() throws IOException {
-
         lobbyConnect();
         roomConnect();
     }
@@ -30,7 +30,7 @@ public class ServerView {
         new Thread(() -> {
             while (true) {
                 try {
-                    System.out.println("wait new player");
+                    System.out.println("Lobby: Waiting");
                     new Player(lobbyServerSocket.accept(), this);
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -44,16 +44,18 @@ public class ServerView {
         new Thread(() -> {
             while (true){
                 try {
-                    System.out.println("Waiting");
+                    System.out.println("Room : Waiting");
                     Socket socket = roomServerSocket.accept();
                     new Thread(() -> {
                         try {
                             ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream());
                             GameData data = (GameData) inputStream.readObject();
-                            System.out.println("room: get a " + data.behavior+ " data.");
+                            System.out.println("Room : get a " + data.behavior+ " data from " + data.source + ".");
                             Player player = getPlayer(data.source);
                             if (player != null){
                                 player.roomSocket = socket;
+                                player.roomInput = inputStream;
+                                player.roomOutput = new ObjectOutputStream(socket.getOutputStream());
                                 player.roomRequest();
                             }
                         } catch (IOException | ClassNotFoundException e) {
