@@ -31,91 +31,91 @@ public class Player {
         this.lobbyInput = new ObjectInputStream(lobbySocket.getInputStream());
         this.lobbyOutput = new ObjectOutputStream(lobbySocket.getOutputStream());
         this.serverView = serverView;
-        new Thread(() -> {
-            lobbyRequest();
-        }).start();
+        lobbyRequest();
     }
 
     public void lobbyRequest() {
-        try{
-            while (true){
-                Data data = (Data) lobbyInput.readObject();
-                System.out.println("Lobby: get a " + data.type + " data from " + name + ".");
-                GameRoom room;
-                switch (data.type){
-                    case Connect:   // Get connect data
-                        if (ServerView.getPlayer(data.playerName) == null){     // add to 'Players'
-                            ServerView.players.add(this);
-                            name = data.playerName;
-                            lobbyRespond(Type.ConnectStatus, "OK");
-                            lobbyRespond(Type.RefreshRoomList, null);
-                            Platform.runLater(() -> {
-                                serverView.updatePlayerList();
-                            });
-                        }else {     // The name had been used
-                            cancelConnect();
-                            lobbyRespond(Type.ConnectStatus, "The name had been used.");
-                        }
-                        break;
-                    case CreateRoom:
-                        if (ServerView.getRoom(data.roomName) == null){       // Create GameRoom
-                            room = new GameRoom(data.roomName, this);
-                            ServerView.rooms.add(room);
-                            myRooms.add(room);
-                            lobbyRespond(Type.CreateRoomStatus, "OK", data.roomName);
-                            Platform.runLater(() -> {
-                                serverView.updateRoomList();
-                            });
-                            for (Player player: ServerView.players){
-                                player.lobbyRespond(Type.RefreshRoomList, null);
+        new Thread(() -> {
+            try{
+                while (true){
+                    Data data = (Data) lobbyInput.readObject();
+                    System.out.println("Lobby: get a " + data.type + " data from " + name + ".");
+                    GameRoom room;
+                    switch (data.type){
+                        case Connect:   // Get connect data
+                            if (ServerView.getPlayer(data.playerName) == null){     // add to 'Players'
+                                ServerView.players.add(this);
+                                name = data.playerName;
+                                lobbyRespond(Type.ConnectStatus, "OK");
+                                lobbyRespond(Type.RefreshRoomList, null);
+                                Platform.runLater(() -> {
+                                    serverView.updatePlayerList();
+                                });
+                            }else {     // The name had been used
+                                lobbyRespond(Type.ConnectStatus, "The name had been used.");
+                                cancelConnect();
                             }
-                        }else {     // The room had existed
-                            lobbyRespond(Type.CreateRoomStatus, "The room had existed.");
-                        }
-                        break;
-                    case EnterRoom:
-                        room = ServerView.getRoom(data.roomName);
-                        if (room != null){
-                            int enterResult = room.enterRoom(this);
-                            if (enterResult == 1){
+                            break;
+                        case CreateRoom:
+                            if (ServerView.getRoom(data.roomName) == null){       // Create GameRoom
+                                room = new GameRoom(data.roomName, this);
+                                ServerView.rooms.add(room);
                                 myRooms.add(room);
-                                lobbyRespond(Type.EnterRoomStatus, "OK", data.roomName);
+                                lobbyRespond(Type.CreateRoomStatus, "OK", data.roomName);
                                 Platform.runLater(() -> {
                                     serverView.updateRoomList();
                                 });
                                 for (Player player: ServerView.players){
                                     player.lobbyRespond(Type.RefreshRoomList, null);
                                 }
-                            }else if (enterResult == 2){
-                                lobbyRespond(Type.CreateRoomStatus, "Do not play with self.");
-                            }else if (enterResult == 3){
-                                lobbyRespond(Type.CreateRoomStatus, "The Room is full.");
+                            }else {     // The room had existed
+                                lobbyRespond(Type.CreateRoomStatus, "The room had existed.");
                             }
-                        } else {
-                            lobbyRespond(Type.CreateRoomStatus, "The Room is not exist.");
-                        }
-                        break;
-                    case QuitRoom:
-                        room = ServerView.getRoom(data.roomName);
-                        if (room != null){
-                            room.quitRoom(this);
-                            myRooms.remove(room);
-                            Platform.runLater(() -> {
-                                serverView.updateRoomList();
-                            });
-                            for (Player player: ServerView.players){
-                                player.lobbyRespond(Type.RefreshRoomList, null);
+                            break;
+                        case EnterRoom:
+                            room = ServerView.getRoom(data.roomName);
+                            if (room != null){
+                                int enterResult = room.enterRoom(this);
+                                if (enterResult == 1){
+                                    myRooms.add(room);
+                                    lobbyRespond(Type.EnterRoomStatus, "OK", data.roomName);
+                                    Platform.runLater(() -> {
+                                        serverView.updateRoomList();
+                                    });
+                                    for (Player player: ServerView.players){
+                                        player.lobbyRespond(Type.RefreshRoomList, null);
+                                    }
+                                }else if (enterResult == 2){
+                                    lobbyRespond(Type.CreateRoomStatus, "Do not play with self.");
+                                }else if (enterResult == 3){
+                                    lobbyRespond(Type.CreateRoomStatus, "The Room is full.");
+                                }
+                            } else {
+                                lobbyRespond(Type.CreateRoomStatus, "The Room is not exist.");
                             }
-                        }
-                        break;
+                            break;
+                        case QuitRoom:
+                            room = ServerView.getRoom(data.roomName);
+                            if (room != null){
+                                room.quitRoom(this);
+                                myRooms.remove(room);
+                                Platform.runLater(() -> {
+                                    serverView.updateRoomList();
+                                });
+                                for (Player player: ServerView.players){
+                                    player.lobbyRespond(Type.RefreshRoomList, null);
+                                }
+                            }
+                            break;
+                    }
                 }
+            }catch (IOException e){
+                System.err.println("Catch: " + e);
+                quitGame();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
             }
-        }catch (IOException e){
-            System.err.println("Catch: " + e);
-            quitGame();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+        }).start();
     }
 
     public void lobbyRespond(Type type, String serverRespond, String roomName){
@@ -148,16 +148,26 @@ public class Player {
                 System.out.println("Room : get a " + data.behavior + " data from " + data.source + ".");
                 Player opponent = ServerView.getRoom(data.roomName).getOpponent(this);
                 switch (data.behavior){
-                    case CheckIn:
-                        roomRespond(data.roomName, "Server", data.behavior);
+                    case Message:
+                        roomRespond(data);
                         if (opponent != null){
-                            opponent.roomRespond(data.roomName, "Server", data.behavior);
+                            opponent.roomRespond(data);
+                        }
+                        break;
+                    case CheckIn:
+                        roomRespond(data.roomName, "Server", data.behavior, name + " enter the room.");
+                        if (opponent != null){
+                            opponent.roomRespond(data.roomName, "Server", data.behavior, name + " enter the room.");
                         }
                         break;
                     case Ready:
                         ServerView.getRoom(data.roomName).ready(this);
                         break;
-                    case Move: case RequestUnMove: case PermitUnMove: case RejectUnMove:
+                    case Move:
+                        roomRespond(data);
+                        opponent.roomRespond(data);
+                        break;
+                    case RequestUnMove: case PermitUnMove: case RejectUnMove:
                         opponent.roomRespond(data);
                         break;
                     case GameEnd: case Surrender:

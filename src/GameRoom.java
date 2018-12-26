@@ -30,10 +30,10 @@ public class GameRoom {
         }else if (host == player){
             host = guest;
             guest = null;
-            host.roomRespond(roomName, "Server", Behavior.CheckOut);     // todo 'tell host that guest leave'
+            host.roomRespond(roomName, "Server", Behavior.CheckOut, player.name + " leave the room.");     // todo 'tell host that guest leave'
         }else if (player == guest){
             guest = null;
-            host.roomRespond(roomName, "Server", Behavior.CheckOut);     // todo 'tell host that guest leave'
+            host.roomRespond(roomName, "Server", Behavior.CheckOut, player.name + " leave the room.");     // todo 'tell host that guest leave'
         }else {
             System.out.println("Some error that not sure how to happen");
         }
@@ -45,8 +45,8 @@ public class GameRoom {
         if (guest == player)
             guestReady = true;
         if (hostReady && guestReady) {
-            host.roomRespond(roomName, "Server", Behavior.GameStart);
-            guest.roomRespond(roomName, "Server", Behavior.GameStart);
+            host.roomRespond(roomName, "Server", Behavior.GameStart, "Game Start.");
+            guest.roomRespond(roomName, "Server", Behavior.GameStart, "Game Start.");
         }
     }
 

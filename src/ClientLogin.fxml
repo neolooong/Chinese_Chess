@@ -78,7 +78,7 @@
                   </GridPane>
                   <HBox prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="1">
                      <children>
-                        <Label prefHeight="54.0" prefWidth="180.0" text="使用者名稱:">
+                        <Label prefHeight="54.0" prefWidth="180.0" text="玩家名稱:">
                            <font>
                               <Font size="31.0" />
                            </font>

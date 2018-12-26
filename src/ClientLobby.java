@@ -6,6 +6,8 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
 import java.util.function.Consumer;
@@ -27,6 +29,19 @@ public class ClientLobby {
             @Override
             public void accept(String s) {
                 try {
+                    BufferedReader reader = new BufferedReader(new FileReader(getClass().getResource("swearWords.txt").getFile()));
+                    while (reader.ready()){
+                        if (s.contains(reader.readLine())){
+                            reader.close();
+                            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                            alert.setTitle("警告");
+                            alert.setHeaderText("");
+                            alert.setContentText("房間名稱出現不雅字詞");
+                            alert.showAndWait();
+                            return;
+                        }
+                    }
+                    reader.close();
                     manager.lobbyRequest(Data.Type.CreateRoom, null, s);
                 } catch (IOException e) {
                     e.printStackTrace();

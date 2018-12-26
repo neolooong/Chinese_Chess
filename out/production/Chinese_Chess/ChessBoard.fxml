@@ -3,6 +3,8 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
@@ -115,6 +117,9 @@
                   <Button fx:id="surrenderBtn" disable="true" mnemonicParsing="false" onAction="#surrenderBtn" prefHeight="50.0" prefWidth="100.0" text="投降" GridPane.columnIndex="2" />
                </children>
             </GridPane>
+            <TextArea fx:id="chatArea" editable="false" focusTraversable="false" layoutX="30.0" layoutY="481.0" prefHeight="200.0" prefWidth="300.0" wrapText="true" />
+            <TextField fx:id="msgInputField" layoutX="31.0" layoutY="688.0" prefHeight="30.0" prefWidth="232.0" />
+            <Button layoutX="269.0" layoutY="688.0" mnemonicParsing="false" onAction="#sendMessage" prefHeight="30.0" prefWidth="55.0" text="傳送" />
          </children></Pane>
    </children>
    <padding>

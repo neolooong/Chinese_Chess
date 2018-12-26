@@ -1,5 +1,9 @@
+import javafx.geometry.Pos;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.Paint;
+import javafx.scene.text.Font;
 
 public class ChessGround extends Label {
     private int positionX, positionY;
@@ -10,6 +14,10 @@ public class ChessGround extends Label {
     }
 
     ChessGround(int positionX, int positionY){
+        setAlignment(Pos.CENTER);
+        setFont(new Font(15));
+        setTextFill(Paint.valueOf("white"));
+        setContentDisplay(ContentDisplay.CENTER);
         this.positionX = positionX;
         this.positionY = positionY;
     }

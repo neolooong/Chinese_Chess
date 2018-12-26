@@ -67,7 +67,6 @@ public class ServerView {
                 }
             }
         }).start();
-
     }
 
     public void updatePlayerList(){

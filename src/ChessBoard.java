@@ -1,11 +1,10 @@
 import Datas.GameData;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.scene.media.AudioClip;
 
 import java.util.LinkedList;
 
@@ -13,6 +12,8 @@ public class ChessBoard {
     public String roomname;
     public int order;           //1先手  2後手
     public boolean isUTurn = false;
+    public TextArea chatArea;
+    public TextField msgInputField;
 
     private ClientManager manager;
     public Label roomNameLabel, serverMessage, player1Name, player2Name;
@@ -23,6 +24,8 @@ public class ChessBoard {
     public ChessGround targetChess = new ChessGround();
     public LinkedList<ChessBoardRecord> history = new LinkedList<>();
 
+    private AudioClip chessMove = new AudioClip(getClass().getResource("audio/Chess_Move.mp3").toString());
+
     //    滑鼠點擊
     public EventHandler<MouseEvent> click = new EventHandler<MouseEvent>() {
         @Override
@@ -31,14 +34,17 @@ public class ChessBoard {
                 ChessGround eventChess = (ChessGround) event.getSource();
                 if (targetChess.getType() == Chess.None) {
                     targetChess = eventChess;
+                    showHint();
                     System.out.println("Target is " + targetChess.getType() + " now.");
                 }else if (targetChess.getGroup().equals(order == 1?"black":"red")){
                     targetChess = new ChessGround();
+                    showHint();
                     System.out.println("This is not your chess.");
                     System.out.println("And, Target is " + targetChess.getType() + " now.");
                 } else {
                     if (targetChess.getGroup().equals(eventChess.getGroup())) {
                         targetChess = eventChess;
+                        showHint();
                         System.out.println("Change target to " + targetChess.getType() + ".");
                     } else {
                         switch (targetChess.getType()) {
@@ -55,9 +61,7 @@ public class ChessBoard {
                                     if (targetChess.getX() == eventChess.getX() && eventChess.getType() == Chess.King){
                                         boolean king2king = true;
                                         for (int i = targetChess.getY() - 1; i > eventChess.getY(); i--){
-                                            System.out.println(i);
                                             if (grounds[targetChess.getX()][i].getType() != Chess.None){
-                                                System.out.println(87);
                                                 king2king = false;
                                                 break;
                                             }
@@ -313,54 +317,111 @@ public class ChessBoard {
         }
     }
 
-    public boolean isWin(){
-        for (int i = 3; i < 6; i++){
-            for (int j = 0; j < 3; j++){
-                if (grounds[i][j].getType() == Chess.King && grounds[i][j].getGroup().equals(order == 1?"black":"red")){
-                    return false;
+    private void showHint() {
+        int x = targetChess.getX();
+        int y = targetChess.getY();
+        switch (targetChess.getType()){
+            case King:
+                if (x+1 < 6 && !targetChess.getGroup().equals(grounds[x+1][y].getGroup())){
+                    grounds[x+1][y].setText("●");
                 }
-            }
+                if (x-1 > 2 && !targetChess.getGroup().equals(grounds[x-1][y].getGroup())){
+                    grounds[x-1][y].setText("●");
+                }
+                if (y+1 < 10 && !targetChess.getGroup().equals(grounds[x][y+1].getGroup())){
+                    grounds[x][y+1].setText("●");
+                }
+                if (y-1 > 6 && !targetChess.getGroup().equals(grounds[x][y-1].getGroup())){
+                    grounds[x][y-1].setText("●");
+                }
+                break;
+            case Chariots:
+                while (x+1 < 9 && y-1 > 0 && !grounds[x+1][y-1].getGroup().equals(order==1?"red":"black")){
+                    grounds[x+1][y-1].setText("●");
+                    if (grounds[x+1][y-1].getGroup().equals(order==1?"black":"red")){
+                        break;
+                    }
+                    x++;
+                    y--;
+                }
+                break;
         }
-        return true;
     }
 
     public void move(boolean isMove, ChessGround destination){
         if (isMove){
-            isUTurn = false;
-            requestPreviousMoveBtn.setDisable(false);
-            ChessBoardRecord record = new ChessBoardRecord(new int[]{targetChess.getX(), targetChess.getY()}, new int[]{destination.getX(), destination.getY()}, destination.getGroup(), destination.getType());
-            destination.setUpChess(targetChess.getGroup(), targetChess.getType());
-            targetChess.setUpChess("", Chess.None);
-            history.addLast(record);
-            if (isWin()){
-                System.out.println("Congratulation!! You win the game.");
-                manager.roomRequest(roomname, GameData.Behavior.GameEnd, null, null);
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setHeaderText("");
-                alert.setContentText("Congratulation!! You win the game.");
-                alert.showAndWait();
-                resetGame();
-            }else {
-                manager.roomRequest(roomname, GameData.Behavior.Move, new int[]{targetChess.getX(), targetChess.getY()}, new int[]{destination.getX(), destination.getY()});
-                System.out.println(destination.getType() + " move to " + destination.getX() + "," + destination.getY() + ".");
-            }
+            manager.roomRequest(roomname, GameData.Behavior.Move, new int[]{targetChess.getX(), targetChess.getY()}, new int[]{destination.getX(), destination.getY()});
         }else {
             targetChess = new ChessGround();
+            clearHint();
             System.out.println("Can't move to there.");
             System.out.println("And, Target is " + targetChess.getType() + " now.");
         }
     }
 
-    public void move(int from[], int to[]){
-        isUTurn = true;
-        requestPreviousMoveBtn.setDisable(true);
-        from = rotate(from);
-        to = rotate(to);
-        ChessBoardRecord record = new ChessBoardRecord(from, to, grounds[to[0]][to[1]].getGroup(), grounds[to[0]][to[1]].getType());
-        grounds[to[0]][to[1]].setUpChess(grounds[from[0]][from[1]].getGroup(), grounds[from[0]][from[1]].getType());
-        grounds[from[0]][from[1]].setUpChess("", Chess.None);
+    private void clearHint() {
+        for (int i = 0; i < 9; i++){
+            for (int j = 0; j < 10; j++){
+                grounds[i][j].setText("");
+            }
+        }
+    }
+
+    public void move(int from[], int to[], boolean rotate){
+        clearHint();
+        isUTurn = !isUTurn;
+        requestPreviousMoveBtn.setDisable(isUTurn);
+        if (rotate){
+            from = rotate(from);
+            to = rotate(to);
+        }
+        chessMove.play();
+        ChessGround startGround = grounds[from[0]][from[1]];
+        ChessGround endGround = grounds[to[0]][to[1]];
+        Chess chess = endGround.getType();
+
+        ChessBoardRecord record = new ChessBoardRecord(from, to, endGround.getGroup(), endGround.getType());
         history.addLast(record);
-        System.out.println(grounds[to[0]][to[1]].getType() + " move to " + from[0] + "," + from[1] + ".");
+
+        endGround.setUpChess(startGround.getGroup(), startGround.getType());
+        startGround.setUpChess("", Chess.None);
+
+        System.out.println(endGround.getType() + " move to " + from[0] + "," + from[1] + ".");
+
+        if (chess == Chess.King) {
+            if (isWin()) {
+                manager.roomRequest(roomname, GameData.Behavior.GameEnd);
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setHeaderText("");
+                alert.setContentText("Congratulation!! You win the game.");
+                alert.showAndWait();
+                resetGame();
+            }
+        }
+    }
+
+    public boolean isWin(){
+        for (int i = 3; i < 6; i++){
+            for (int j = 0; j < 3; j++){
+                if (grounds[i][j].getType() == Chess.King){
+                    if (grounds[i][j].getGroup().equals(order == 1?"black":"red")){
+                        return false;
+                    }
+                    return true;
+                }
+            }
+        }
+        for (int i = 3; i < 6; i++){
+            for (int j = 7; j < 10; j++){
+                if (grounds[i][j].getType() == Chess.King) {
+                    if (grounds[i][j].getGroup().equals(order == 1 ? "black" : "red")) {
+                        return false;
+                    }
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public void unMove(){
@@ -384,13 +445,14 @@ public class ChessBoard {
 
     public void readyBtn(ActionEvent event){
         readyBtn.setDisable(true);
-        manager.roomRequest(roomname, GameData.Behavior.Ready, null, null);
+        manager.roomRequest(roomname, GameData.Behavior.Ready);
     }
 
     public void openNewGame() {
         System.out.println(roomname + ": Game Start!!");
         surrenderBtn.setDisable(false);
         if (order == 1){
+            chatArea.appendText("--- Your Turn ---\n");
             isUTurn = true;
             grounds[0][6].setUpChess("red", Chess.Pawn);
             grounds[2][6].setUpChess("red", Chess.Pawn);
@@ -500,11 +562,16 @@ public class ChessBoard {
     }
 
     public void requestUnMoveBtn(ActionEvent event) {
-        manager.roomRequest(roomname, GameData.Behavior.RequestUnMove, null, null);
+        manager.roomRequest(roomname, GameData.Behavior.RequestUnMove);
     }
 
     public void surrenderBtn(ActionEvent event) {
-        manager.roomRequest(roomname, GameData.Behavior.Surrender, null, null);
+        manager.roomRequest(roomname, GameData.Behavior.Surrender);
         resetGame();
+    }
+
+    public void sendMessage(ActionEvent event) {
+        if (!msgInputField.getText().trim().equals(""))
+            manager.roomRequest(roomname, GameData.Behavior.Message, msgInputField.getText());
     }
 }

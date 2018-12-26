@@ -71,7 +71,7 @@ public class ClientManager {
     public void lobbyRespond(){
         new Thread(() -> {
             try{
-                keepListen:while (true) {
+                keepListen: while (true) {
                     Data data = (Data) lobbyInput.readObject();
                     System.out.println("get a " + data.type + " data.");
                     switch (data.type) {
@@ -171,7 +171,6 @@ public class ClientManager {
                 lobbyOutput.flush();
                 break;
         }
-
     }
 
     public void roomRespond() {
@@ -181,9 +180,12 @@ public class ClientManager {
                     GameData data = (GameData) roomInput.readObject();
                     ChessBoard board = getChessBoard(data.roomName);
                     System.out.println("Get " + data.behavior + " data");
+                    if (data.message != null)
+                        board.chatArea.appendText(data.source + ":" + data.message + "\n");
                     switch (data.behavior) {
-                        case ServerMessage:
-                            board.serverMessage.setText(data.message);
+                        case Message:
+                            if (data.source.equals(name))
+                                board.msgInputField.setText("");
                             break;
                         case CheckIn:
                             Platform.runLater(() -> {
@@ -205,9 +207,16 @@ public class ClientManager {
                             });
                             break;
                         case Move:
-                            Platform.runLater(() -> {
-                                board.move(data.from, data.to);
-                            });
+                            if (data.source.equals(name)){
+                                Platform.runLater(() -> {
+                                    board.move(data.from, data.to, false);
+                                });
+                            }else {
+                                Platform.runLater(() -> {
+                                    board.move(data.from, data.to, true);
+                                    board.chatArea.appendText("--- Your Turn ---\n");
+                                });
+                            }
                             break;
                         case RequestUnMove:
                             Platform.runLater(() -> {
@@ -262,9 +271,10 @@ public class ClientManager {
         }).start();
     }
 
-    public void roomRequest(String roomName, Behavior behavior, int from[], int to[]) {
+    public void roomRequest(String roomName, Behavior behavior, String message, int from[], int to[]){
         try {
             GameData data = new GameData(roomName, name, behavior);
+            data.message = message;
             data.from = from;
             data.to = to;
             roomOutput.writeObject(data);
@@ -274,8 +284,16 @@ public class ClientManager {
         }
     }
 
-    private void roomRequest(String roomName, Behavior behavior) {
-        roomRequest(roomName, behavior, null, null);
+    public void roomRequest(String roomName, Behavior behavior, int from[], int to[]) {
+        roomRequest(roomName, behavior, null, from, to);
+    }
+
+    public void roomRequest(String roomName, Behavior behavior, String message){
+        roomRequest(roomName, behavior, message, null, null);
+    }
+
+    public void roomRequest(String roomName, Behavior behavior) {
+        roomRequest(roomName, behavior, null, null, null);
     }
 
     public void quitGame(){
