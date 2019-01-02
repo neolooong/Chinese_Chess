@@ -14,8 +14,8 @@ public class ClientLogin {
 
     public void initialize(){
         userNameTextField.setText("蘇家緯");
-//        ipTextField.setText("10.91.1.15");
-        ipTextField.setText("10.51.3.203");
+        ipTextField.setText("10.91.1.15");
+//        ipTextField.setText("10.51.3.203");
         portTextField.setText("16888");
     }
 
@@ -41,7 +41,7 @@ public class ClientLogin {
         manager.setName(userNameTextField.getText());
 
         manager.getStage().setOnCloseRequest(event -> {
-            manager.quitGame();
+            manager.cancelConnect();
             System.exit(0);
         });
     }

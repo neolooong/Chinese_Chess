@@ -5,6 +5,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.media.AudioClip;
+import javafx.stage.Stage;
 
 import java.util.LinkedList;
 
@@ -15,6 +16,7 @@ public class ChessBoard {
     public TextArea chatArea;
     public TextField msgInputField;
 
+    public Stage stage;
     private ClientManager manager;
     public Label roomNameLabel, serverMessage, player1Name, player2Name;
     public Button readyBtn, requestPreviousMoveBtn, surrenderBtn;
@@ -555,6 +557,10 @@ public class ChessBoard {
     public void setRoomname(String roomname) {
         this.roomname = roomname;
         this.roomNameLabel.setText("房間名稱: " + roomname);
+    }
+
+    public void setStage(Stage stage) {
+        this.stage = stage;
     }
 
     public void setOrder(int order) {

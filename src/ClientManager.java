@@ -33,9 +33,13 @@ public class ClientManager {
     public ObjectOutputStream roomOutput;
     private Parent loginRoot;                   // 登入版面
     private Parent lobbyRoot;                   // 大廳版面
+    public Scene loginScene;
+    public Scene lobbyScene;
     private ClientLogin clientLogin;            // 登入的 Controller
     private ClientLobby clientLobby;            // 大廳的 Controller
     public ArrayList<ChessBoard> chessBoards = new ArrayList<>(); // 目前所在房間
+
+    public boolean isConnect = false;
 
     ClientManager() throws IOException {
         FXMLLoader loader;
@@ -43,11 +47,13 @@ public class ClientManager {
         loader = new FXMLLoader(getClass().getResource("ClientLogin.fxml"));
         loginRoot = loader.load();
         loginRoot.getStylesheets().add(ClientMain.class.getResource("Login.css").toExternalForm());
+        loginScene = new Scene(loginRoot);
         clientLogin = loader.getController();
         clientLogin.setClientManager(this);
 
         loader = new FXMLLoader(getClass().getResource("ClientLobby.fxml"));
         lobbyRoot = loader.load();
+        lobbyScene = new Scene(lobbyRoot);
         clientLobby = loader.getController();
         clientLobby.setClientManager(this);
     }
@@ -78,9 +84,10 @@ public class ClientManager {
                         case ConnectStatus:
                             if (data.serverRespond.equals("OK")) {
                                 roomConnect(server);
+                                isConnect = true;
                                 Platform.runLater(() -> {
                                     clientLobby.setPlayerName(name);
-                                    stage.setScene(new Scene(lobbyRoot));
+                                    stage.setScene(lobbyScene);
                                     stage.centerOnScreen();
                                 });
                             } else {
@@ -141,6 +148,7 @@ public class ClientManager {
                     }
                 }
             }catch (IOException | ClassNotFoundException e){
+                disConnect();
                 System.err.println("Catch: " + e);
             }
         }).start();
@@ -266,6 +274,7 @@ public class ClientManager {
                     }
                 }
             } catch (IOException | ClassNotFoundException e) {
+                disConnect();
                 System.err.println("Catch: " + e);
             }
         }).start();
@@ -296,7 +305,7 @@ public class ClientManager {
         roomRequest(roomName, behavior, null, null, null);
     }
 
-    public void quitGame(){
+    public void cancelConnect(){
         try {
             if (lobbySocket != null)
                 lobbySocket.close();
@@ -311,7 +320,7 @@ public class ClientManager {
             if (roomOutput != null)
                 roomOutput.close();
         } catch (IOException e) {
-            System.err.println("Catch: " + e);
+            System.err.println("Quit Game: Catch: " + e);
         }
     }
 
@@ -326,6 +335,8 @@ public class ClientManager {
         chessBoards.add(chessBoard);
 
         Stage stage = new Stage();
+        chessBoard.setStage(stage);
+
         stage.setTitle("象棋靈王八蛋營養大象棋");
         stage.getIcons().add(new Image("img/icon.png"));
         stage.setScene(new Scene(root));
@@ -349,14 +360,6 @@ public class ClientManager {
         this.stage = stage;
     }
 
-    public Parent getLoginRoot() {
-        return loginRoot;
-    }
-
-    public Parent getLobbyRoot() {
-        return lobbyRoot;
-    }
-
     public void setName(String name) {
         this.name = name;
     }
@@ -368,5 +371,24 @@ public class ClientManager {
             }
         }
         return null;
+    }
+
+    public synchronized void disConnect(){
+        if (isConnect) {
+            Platform.runLater(() -> {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setHeaderText("");
+                alert.setContentText("Can not connect to Server...");
+                alert.showAndWait();
+                stage.setScene(loginScene);
+            });
+            cancelConnect();
+            for (ChessBoard chessBoard : chessBoards) {
+                Platform.runLater(() -> {
+                    chessBoard.stage.close();
+                });
+            }
+            isConnect = false;
+        }
     }
 }

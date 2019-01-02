@@ -11,7 +11,7 @@ public class ClientMain extends Application {
         ClientManager manager = new ClientManager();
         manager.setStage(primaryStage);
 
-        primaryStage.setScene(new Scene(manager.getLoginRoot()));
+        primaryStage.setScene(manager.loginScene);
         primaryStage.setTitle("登入器");
         primaryStage.getIcons().add(new Image("img/icon.png"));
         primaryStage.setResizable(false);
