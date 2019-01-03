@@ -36,17 +36,14 @@ public class ChessBoard {
                 ChessGround eventChess = (ChessGround) event.getSource();
                 if (targetChess.getType() == Chess.None) {
                     targetChess = eventChess;
-                    showHint();
                     System.out.println("Target is " + targetChess.getType() + " now.");
                 }else if (targetChess.getGroup().equals(order == 1?"black":"red")){
                     targetChess = new ChessGround();
-                    showHint();
                     System.out.println("This is not your chess.");
                     System.out.println("And, Target is " + targetChess.getType() + " now.");
                 } else {
                     if (targetChess.getGroup().equals(eventChess.getGroup())) {
                         targetChess = eventChess;
-                        showHint();
                         System.out.println("Change target to " + targetChess.getType() + ".");
                     } else {
                         switch (targetChess.getType()) {
@@ -319,58 +316,17 @@ public class ChessBoard {
         }
     }
 
-    private void showHint() {
-        int x = targetChess.getX();
-        int y = targetChess.getY();
-        switch (targetChess.getType()){
-            case King:
-                if (x+1 < 6 && !targetChess.getGroup().equals(grounds[x+1][y].getGroup())){
-                    grounds[x+1][y].setText("●");
-                }
-                if (x-1 > 2 && !targetChess.getGroup().equals(grounds[x-1][y].getGroup())){
-                    grounds[x-1][y].setText("●");
-                }
-                if (y+1 < 10 && !targetChess.getGroup().equals(grounds[x][y+1].getGroup())){
-                    grounds[x][y+1].setText("●");
-                }
-                if (y-1 > 6 && !targetChess.getGroup().equals(grounds[x][y-1].getGroup())){
-                    grounds[x][y-1].setText("●");
-                }
-                break;
-            case Chariots:
-                while (x+1 < 9 && y-1 > 0 && !grounds[x+1][y-1].getGroup().equals(order==1?"red":"black")){
-                    grounds[x+1][y-1].setText("●");
-                    if (grounds[x+1][y-1].getGroup().equals(order==1?"black":"red")){
-                        break;
-                    }
-                    x++;
-                    y--;
-                }
-                break;
-        }
-    }
-
     public void move(boolean isMove, ChessGround destination){
         if (isMove){
             manager.roomRequest(roomname, GameData.Behavior.Move, new int[]{targetChess.getX(), targetChess.getY()}, new int[]{destination.getX(), destination.getY()});
         }else {
             targetChess = new ChessGround();
-            clearHint();
             System.out.println("Can't move to there.");
             System.out.println("And, Target is " + targetChess.getType() + " now.");
         }
     }
 
-    private void clearHint() {
-        for (int i = 0; i < 9; i++){
-            for (int j = 0; j < 10; j++){
-                grounds[i][j].setText("");
-            }
-        }
-    }
-
     public void move(int from[], int to[], boolean rotate){
-        clearHint();
         isUTurn = !isUTurn;
         requestPreviousMoveBtn.setDisable(isUTurn);
         if (rotate){

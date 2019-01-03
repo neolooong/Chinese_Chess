@@ -8,6 +8,8 @@ public class GameRoom {
     public boolean hostReady = false;
     public boolean guestReady = false;
 
+    public String status = "Rest";
+
     GameRoom (String roomName, Player host){
         this.roomName = roomName;
         this.host = host;
@@ -45,6 +47,7 @@ public class GameRoom {
         if (guest == player)
             guestReady = true;
         if (hostReady && guestReady) {
+            status = "GameStart";
             host.roomRespond(roomName, "Server", Behavior.GameStart, "Game Start.");
             guest.roomRespond(roomName, "Server", Behavior.GameStart, "Game Start.");
         }
@@ -53,6 +56,7 @@ public class GameRoom {
     public void resetRoom(){
         hostReady = false;
         guestReady = false;
+        status = "Rest";
     }
 
     public Player getOpponent(Player player){

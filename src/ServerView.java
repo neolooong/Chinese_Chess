@@ -100,6 +100,6 @@ public class ServerView {
                 return room;
             }
         }
-        return null;
+        throw new Error("Can not find the room.");
     }
 }

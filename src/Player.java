@@ -146,7 +146,8 @@ public class Player {
             while (true){
                 GameData data = (GameData) roomInput.readObject();
                 System.out.println("Room : get a " + data.behavior + " data from " + data.source + ".");
-                Player opponent = ServerView.getRoom(data.roomName).getOpponent(this);
+                GameRoom room = ServerView.getRoom(data.roomName);
+                Player opponent = room.getOpponent(this);
                 switch (data.behavior){
                     case Message:
                         roomRespond(data);
@@ -161,18 +162,31 @@ public class Player {
                         }
                         break;
                     case Ready:
-                        ServerView.getRoom(data.roomName).ready(this);
+                        room.ready(this);
                         break;
                     case Move:
-                        roomRespond(data);
+                        synchronized (room.status){
+                            if (room.status.equals("GameStart")) {
+                                roomRespond(data);
+                                opponent.roomRespond(data);
+                            }
+                        }
+                        break;
+                    case RequestUnMove:
+                        synchronized (room.status){
+                            room.status = "RequestUnMove";
+                        }
                         opponent.roomRespond(data);
                         break;
-                    case RequestUnMove: case PermitUnMove: case RejectUnMove:
+                    case PermitUnMove: case RejectUnMove:
+                        synchronized (room.status){
+                            room.status = "GameStart";
+                        }
                         opponent.roomRespond(data);
                         break;
                     case GameEnd: case Surrender:
                         opponent.roomRespond(data);
-                        ServerView.getRoom(data.roomName).resetRoom();
+                        room.resetRoom();
                         break;
                 }
             }
