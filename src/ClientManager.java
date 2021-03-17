@@ -88,7 +88,7 @@ public class ClientManager {
                                 Platform.runLater(() -> {
                                     clientLobby.setPlayerName(name);
                                     stage.setScene(lobbyScene);
-                                    stage.centerOnScreen();
+//                                    stage.centerOnScreen();
                                 });
                             } else {
                                 Platform.runLater(() -> {
@@ -337,7 +337,7 @@ public class ClientManager {
         Stage stage = new Stage();
         chessBoard.setStage(stage);
 
-        stage.setTitle("象棋靈王八蛋營養大象棋");
+        stage.setTitle("象棋");
         stage.getIcons().add(new Image("img/icon.png"));
         stage.setScene(new Scene(root));
         stage.setOnCloseRequest(event -> {

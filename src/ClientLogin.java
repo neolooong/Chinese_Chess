@@ -13,9 +13,8 @@ public class ClientLogin {
     private TextField userNameTextField ,ipTextField , portTextField;
 
     public void initialize(){
-        userNameTextField.setText("蘇家緯");
-        ipTextField.setText("10.91.1.15");
-//        ipTextField.setText("10.51.3.203");
+        userNameTextField.setText("Player");
+        ipTextField.setText("10.91.5.55");
         portTextField.setText("16888");
     }
 
